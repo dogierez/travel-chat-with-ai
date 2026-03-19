@@ -11,51 +11,48 @@
         .container { max-width: 1000px; margin: 0 auto; }
         h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 2.2rem; }
         
-        /* Lobby Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        /* Lobby */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .step-card.locked { opacity: 0.5; cursor: not-allowed; background: #e5e7eb; border-style: dashed; }
         .step-card:not(.locked):hover { border-color: var(--primary); transform: translateY(-3px); }
         .step-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
-        .step-title { font-weight: bold; font-size: 1rem; display: block; min-height: 2.4em; }
-        .progress-tag { font-size: 0.75rem; color: var(--primary); font-weight: bold; margin-top: 10px; }
+        .progress-tag { font-size: 0.8rem; color: var(--primary); font-weight: bold; margin-top: 10px; background: #eff6ff; padding: 4px; border-radius: 5px; }
 
-        /* Scenario List */
-        .back-btn { background: #64748b; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .dialogue-item { background: white; padding: 15px; border-radius: 10px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        /* Navigation */
+        .back-btn { background: #64748b; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+        .dialogue-item { background: white; padding: 18px; border-radius: 10px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; margin-bottom: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         /* Game Modes */
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .mode-btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .mode-btn { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; }
         .btn-listen { background: #3b82f6; } .btn-read { background: #8b5cf6; } .btn-match { background: #f59e0b; } .btn-speak { background: #10b981; }
-        #content-area { background: white; padding: 25px; border-radius: 12px; min-height: 380px; border: 1px solid #e2e8f0; overflow-y: auto; }
+        #content-area { background: white; padding: 30px; border-radius: 15px; min-height: 400px; border: 1px solid #e2e8f0; }
 
         /* Vocab & Read Mode */
-        .dialogue-line { margin-bottom: 15px; font-size: 1.15rem; line-height: 1.6; }
+        .dialogue-line { margin-bottom: 15px; font-size: 1.2rem; line-height: 1.6; }
         .speaker-label { font-weight: bold; color: #475569; margin-right: 8px; }
         .speaker-Deniz { color: var(--primary) !important; }
         .vocab { border-bottom: 2px dashed #f59e0b; cursor: pointer; color: #c2410c; font-weight: bold; position: relative; padding: 0 2px; }
-        .vocab:hover { background: #fff7ed; }
-        .tooltip { display: none; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; z-index: 100; white-space: nowrap; }
+        .tooltip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; z-index: 100; white-space: nowrap; }
         .vocab:hover .tooltip { display: block; }
 
-        /* Matching Game - COLOR SYNCED */
-        .match-grid { display: flex; justify-content: space-around; gap: 15px; }
-        .match-col { display: flex; flex-direction: column; gap: 8px; width: 48%; }
-        .match-btn { padding: 14px 10px; border-radius: 10px; border: 2px solid transparent; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        /* Matching Game Colors */
+        .match-grid { display: flex; justify-content: space-around; gap: 20px; }
+        .match-col { display: flex; flex-direction: column; gap: 10px; width: 45%; }
+        .match-btn { padding: 15px; border-radius: 10px; border: 2px solid transparent; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
         .match-en { background: #fb923c; color: white; border-color: #f97316; } /* Orange */
         .match-tr { background: #7dd3fc; color: #0369a1; border-color: #38bdf8; } /* Light Blue */
         .selected { outline: 5px solid #2563eb; transform: scale(0.96); }
         .matched { visibility: hidden; pointer-events: none; }
 
-        /* Speech Mode */
+        /* Speaking Practice */
         .speech-box { text-align: center; }
-        .bot-prompt { font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; color: #334155; }
-        .mic-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 85px; height: 85px; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+        .bot-prompt { font-size: 1.4rem; font-weight: bold; margin-bottom: 30px; }
+        .mic-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 90px; height: 90px; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
         .mic-btn.listening { animation: pulse 1s infinite; background: #dc2626; }
         .feedback { margin-top: 20px; font-size: 1.2rem; font-weight: bold; }
-        .correct { color: #10b981; } .incorrect { color: #ef4444; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -89,7 +86,7 @@
 
 <script>
     let progress = JSON.parse(localStorage.getItem('denizTravelProgress')) || {};
-    let activeStepKey = '', activeIdx = null;
+    let activeStepKey = '', activeIdx = null, currentAudio = null;
     let recognition, currentQIdx = 0, attempts = 0;
 
     const stepInfo = [
@@ -107,76 +104,98 @@
             dialogues: [
                 {
                     title: "1.1 General Check-in",
-                    // PATH FIXED: Files are in root
-                    audio: "Step_1_1_General_Check-in.mp3",
+                    audio: "./Step_1_1_General_Check-in.mp3",
                     lines: [
                         { s: "Agent", t: "Hello, where are you <span class='vocab' onclick='modeMatch()'>flying<span class='tooltip'>uçmak (v)</span></span> today?" },
                         { s: "Deniz", t: "Hello, I am flying to London." },
                         { s: "Agent", t: "Can I see your <span class='vocab' onclick='modeMatch()'>passport<span class='tooltip'>pasaport (n)</span></span>, please?" },
-                        { s: "Deniz", t: "Yes, here is my passport." },
-                        { s: "Agent", t: "Are you traveling <span class='vocab' onclick='modeMatch()'>alone<span class='tooltip'>yalnız (adj)</span></span>?" },
-                        { s: "Deniz", t: "Yes, it is <span class='vocab' onclick='modeMatch()'>just<span class='tooltip'>sadece (adv)</span></span> me." }
+                        { s: "Deniz", t: "Yes, here is my passport." }
                     ],
-                    // 10 PAIRS FOR MATCHING GAME
-                    pairs: [
-                        {e:"flying", t:"uçmak (v)"}, {e:"passport", t:"pasaport (n)"}, 
-                        {e:"alone", t:"yalnız (adj)"}, {e:"traveling", t:"seyahat etmek (v)"},
-                        {e:"just", t:"sadece (adv)"}, {e:"today", t:"bugün (adv)"},
-                        {e:"hello", t:"merhaba (int)"}, {e:"London", t:"Londra (n)"},
-                        {e:"see", t:"görmek/bakmak (v)"}, {e:"please", t:"lütfen (adv)"}
-                    ],
-                    questions: [
-                        { q: "Where are you flying today?", a: "hello i am flying to london" },
-                        { q: "Can I see your passport?", a: "yes here is my passport" },
-                        { q: "Are you traveling alone?", a: "yes it is just me" },
-                        { q: "Have a nice trip!", a: "thank you very much" }
-                    ]
+                    pairs: [{e:"flying", t:"uçmak (v)"},{e:"passport", t:"pasaport (n)"},{e:"traveling", t:"seyahat etmek (v)"},{e:"alone", t:"yalnız (adj)"},{e:"check-in", t:"kayıt (v)"},{e:"today", t:"bugün (adv)"},{e:"see", t:"bakmak (v)"},{e:"please", t:"lütfen (adv)"},{e:"yes", t:"evet (adv)"},{e:"hello", t:"merhaba (int)"}],
+                    questions: [{q: "Where are you flying today?", a: "hello i am flying to london"}]
                 },
                 {
                     title: "1.2 Checking Baggage",
-                    audio: "Step_1_2_Checking_Baggage.mp3",
+                    audio: "./Step_1_2_Checking_Baggage.mp3",
                     lines: [
-                        { s: "Agent", t: "Do you have <span class='vocab' onclick='modeMatch()'>bags</span> to <span class='vocab' onclick='modeMatch()'>check in</span>?" },
-                        { s: "Deniz", t: "Yes, I have one <span class='vocab' onclick='modeMatch()'>large</span> suitcase." }
+                        { s: "Agent", t: "Do you have <span class='vocab' onclick='modeMatch()'>bags<span class='tooltip'>çantalar (n)</span></span> to <span class='vocab' onclick='modeMatch()'>check in<span class='tooltip'>kayıt yaptırmak (v)</span></span>?" },
+                        { s: "Deniz", t: "Yes, I have one <span class='vocab' onclick='modeMatch()'>large<span class='tooltip'>büyük (adj)</span></span> suitcase." }
                     ],
-                    pairs: [{e:"bags", t:"çantalar (n)"}, {e:"check in", t:"kayıt yaptırmak (v)"}, {e:"large", t:"büyük (adj)"}, {e:"suitcase", t:"valiz (n)"}, {e:"yes", t:"evet"}, {e:"have", t:"sahip olmak (v)"}],
+                    pairs: [{e:"bags", t:"çantalar (n)"},{e:"check in", t:"kayıt yaptırmak (v)"},{e:"large", t:"büyük (adj)"},{e:"suitcase", t:"valiz (n)"},{e:"have", t:"sahip olmak (v)"},{e:"yes", t:"evet (adv)"},{e:"one", t:"bir (adj)"},{e:"big", t:"büyük (adj)"}],
                     questions: [{q: "Do you have bags to check in?", a: "yes i have one large suitcase"}]
+                },
+                {
+                    title: "1.3 Overweight Luggage",
+                    audio: "./Step_1_3_Overweight_Luggage.mp3",
+                    lines: [
+                        { s: "Agent", t: "Your bag is <span class='vocab' onclick='modeMatch()'>heavy<span class='tooltip'>ağır (adj)</span></span>. It is <span class='vocab' onclick='modeMatch()'>overweight<span class='tooltip'>sınırı aşan (adj)</span></span>." },
+                        { s: "Deniz", t: "Can I <span class='vocab' onclick='modeMatch()'>pay<span class='tooltip'>ödemek (v)</span></span> the <span class='vocab' onclick='modeMatch()'>extra<span class='tooltip'>fazla/ek (adj)</span></span> fee?" }
+                    ],
+                    pairs: [{e:"heavy", t:"ağır (adj)"},{e:"overweight", t:"sınırı aşan (adj)"},{e:"pay", t:"ödemek (v)"},{e:"extra", t:"ek (adj)"},{e:"fee", t:"ücret (n)"},{e:"sorry", t:"üzgün (adj)"},{e:"bag", t:"çanta (n)"},{e:"limit", t:"sınır (n)"}],
+                    questions: [{q: "Your bag is overweight.", a: "can i pay the extra fee"}]
+                },
+                {
+                    title: "1.4 Seat Preference",
+                    audio: "./Step_1_4_Seat_Preference.mp3",
+                    lines: [
+                        { s: "Agent", t: "Do you <span class='vocab' onclick='modeMatch()'>prefer<span class='tooltip'>tercih etmek (v)</span></span> a <span class='vocab' onclick='modeMatch()'>window<span class='tooltip'>pencere (n)</span></span> or an <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span> seat?" },
+                        { s: "Deniz", t: "I want a window seat in the <span class='vocab' onclick='modeMatch()'>front<span class='tooltip'>ön (adj)</span></span>." }
+                    ],
+                    pairs: [{e:"prefer", t:"tercih etmek (v)"},{e:"window", t:"pencere (n)"},{e:"aisle", t:"koridor (n)"},{e:"front", t:"ön (adj)"},{e:"seat", t:"koltuk (n)"},{e:"want", t:"istemek (v)"},{e:"available", t:"müsait (adj)"},{e:"back", t:"arka (adj)"}],
+                    questions: [{q: "Window or aisle?", a: "i want a window seat"}]
+                },
+                {
+                    title: "1.5 Boarding Time",
+                    audio: "./Step_1_5_Boarding_Time_Inquiry.mp3",
+                    lines: [
+                        { s: "Deniz", t: "When does <span class='vocab' onclick='modeMatch()'>boarding<span class='tooltip'>uçağa biniş (n)</span></span> <span class='vocab' onclick='modeMatch()'>start<span class='tooltip'>başlamak (v)</span></span>?" },
+                        { s: "Agent", t: "It is <span class='vocab' onclick='modeMatch()'>departing<span class='tooltip'>ayrılmak (v)</span></span> <span class='vocab' onclick='modeMatch()'>on time<span class='tooltip'>vaktinde (adj)</span></span>." }
+                    ],
+                    pairs: [{e:"boarding", t:"uçağa biniş (n)"},{e:"start", t:"başlamak (v)"},{e:"departing", t:"ayrılmak (v)"},{e:"on time", t:"vaktinde (adj)"},{e:"gate", t:"kapı (n)"},{e:"time", t:"vakit (n)"},{e:"delayed", t:"gecikmiş (adj)"},{e:"early", t:"erken (adj)"}],
+                    questions: [{q: "When does boarding start?", a: "boarding starts at ten thirty"}]
                 }
+            ]
+        },
+        step2: {
+            dialogues: [
+                {
+                    title: "2.1 Finding the Seat",
+                    audio: "./Step_2_1_Finding_the_Seat.mp3",
+                    lines: [
+                        { s: "Flight Attendant", t: "Welcome! <span class='vocab' onclick='modeMatch()'>Walk<span class='tooltip'>yürümek (v)</span></span> down this <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span>." },
+                        { s: "Deniz", t: "Is it <span class='vocab' onclick='modeMatch()'>next to<span class='tooltip'>yanında (adj)</span></span> the window?" }
+                    ],
+                    pairs: [{e:"walk", t:"yürümek (v)"},{e:"aisle", t:"koridor (n)"},{e:"next to", t:"yanında (adj)"},{e:"window", t:"pencere (n)"},{e:"find", t:"bulmak (v)"},{e:"left", t:"sol (adj)"},{e:"right", t:"sağ (adj)"},{e:"seat", t:"koltuk (n)"}],
+                    questions: [{q: "Walk down the aisle.", a: "is it next to the window"}]
+                },
+                { title: "2.2 Overhead Bin", audio: "./Step_2_2_Overhead_Bin_Space.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.3 Wrong Seat", audio: "./Step_2_3_Wrong_Seat.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.4 Blanket Request", audio: "./Step_2_4_Asking_for_a_Blanket.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.5 Safety Check", audio: "./Step_2_5_Safety_Check.mp3", lines: [], pairs: [], questions: [] }
             ]
         }
     };
 
-    // Auto-fill for all 21 steps
-    for(let i=1; i<=21; i++) {
-        if(!appData['step'+i]) appData['step'+i] = { dialogues: [] };
-        while(appData['step'+i].dialogues.length < 5) {
-            appData['step'+i].dialogues.push({ title: "Coming Soon", lines: [], pairs: [], questions: [] });
-        }
-    }
+    // Auto-fill template for 3-21
+    for(let i=3; i<=21; i++) appData['step'+i] = { dialogues: Array(5).fill({title: "Coming Soon", lines: [], pairs: [], questions: []}) };
 
     function initLobby() {
-        const grid = document.getElementById('step-grid');
-        grid.innerHTML = '';
+        const grid = document.getElementById('step-grid'); grid.innerHTML = '';
         stepInfo.forEach((info, i) => {
-            const key = 'step' + (i+1);
-            const prev = 'step' + i;
+            const key = 'step'+(i+1), prev = 'step'+i;
             const isUnlocked = i === 0 || (progress[prev] && Object.keys(progress[prev]).length >= 2);
-            const doneCount = progress[key] ? Object.keys(progress[key]).length : 0;
             grid.innerHTML += `<div class="step-card ${isUnlocked ? '' : 'locked'}" onclick="${isUnlocked ? `openStep('${key}')` : ''}">
                 <span class="step-icon">${isUnlocked ? info.i : '🔒'}</span>
                 <span class="step-title">${i+1}. ${info.t}</span>
-                <div class="progress-tag">${doneCount}/5 Completed</div></div>`;
+                <div class="progress-tag">${progress[key] ? Object.keys(progress[key]).length : 0}/5 Done</div></div>`;
         });
     }
 
     function openStep(key) {
-        activeStepKey = key;
-        document.getElementById('lobby-view').classList.add('hidden');
-        document.getElementById('step-view').classList.remove('hidden');
-        document.getElementById('game-view').classList.add('hidden');
+        activeStepKey = key; document.getElementById('lobby-view').classList.add('hidden');
+        document.getElementById('step-view').classList.remove('hidden'); document.getElementById('game-view').classList.add('hidden');
         document.getElementById('step-title').innerText = stepInfo[parseInt(key.replace('step',''))-1].t;
-        const list = document.getElementById('dialogue-list');
-        list.innerHTML = '';
+        const list = document.getElementById('dialogue-list'); list.innerHTML = '';
         appData[key].dialogues.forEach((d, idx) => {
             const isDone = progress[key] && progress[key][idx];
             list.innerHTML += `<div class="dialogue-item" onclick="openGame(${idx})"><span>${idx+1}. ${d.title}</span><span>${isDone ? '✅' : '⏳'}</span></div>`;
@@ -184,43 +203,31 @@
     }
 
     function openGame(idx) {
-        activeIdx = idx;
-        document.getElementById('step-view').classList.add('hidden');
-        document.getElementById('game-view').classList.remove('hidden');
+        activeIdx = idx; document.getElementById('step-view').classList.add('hidden'); document.getElementById('game-view').classList.remove('hidden');
         document.getElementById('game-title').innerText = appData[activeStepKey].dialogues[idx].title;
-        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center;margin-top:100px; color:#94a3b8;">Choose a practice mode above!</h3>';
+        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center;margin-top:100px;color:#94a3b8;">Choose a mode!</h3>';
     }
 
     function modeListen() {
-        const player = document.getElementById('master-player');
-        const path = appData[activeStepKey].dialogues[activeIdx].audio;
-        player.src = path;
-        player.play().catch(e => console.error("Audio failed. Check filename case on GitHub.", e));
-        saveProgress();
-        document.getElementById('content-area').innerHTML = `<div style="text-align:center; padding-top:60px;"><h2>🎧 Listening Mode</h2><p>Listen closely to the dialogue.</p></div>`;
+        const p = document.getElementById('master-player'); p.src = appData[activeStepKey].dialogues[activeIdx].audio;
+        p.play().catch(e => console.error("Audio failed:", e)); saveProgress();
+        document.getElementById('content-area').innerHTML = `<div style="text-align:center;padding-top:60px;"><h2>🎧 Listening...</h2></div>`;
     }
 
     function modeRead() {
-        modeListen();
-        let html = '<h3 style="border-bottom:1px solid #eee; padding-bottom:10px;">Read & Listen</h3>';
+        modeListen(); let html = '<h3 style="border-bottom:1px solid #eee;padding-bottom:10px;">Read & Listen</h3>';
         appData[activeStepKey].dialogues[activeIdx].lines.forEach(l => {
             html += `<div class="dialogue-line"><span class="speaker-label speaker-${l.s}">${l.s}:</span> ${l.t}</div>`;
         });
-        document.getElementById('content-area').innerHTML = html || '<h3>Scenario text coming soon!</h3>';
+        document.getElementById('content-area').innerHTML = html || '<h3>Coming soon!</h3>';
     }
 
     let mSel = { e: null, t: null };
     function modeMatch() {
-        saveProgress();
-        const d = appData[activeStepKey].dialogues[activeIdx];
-        const source = (d.pairs && d.pairs.length >= 4) ? d.pairs : [{e:"Hello", t:"Merhaba"},{e:"Please", t:"Lütfen"},{e:"Thanks", t:"Teşekkürler"},{e:"Yes", t:"Evet"}];
-        
-        let en = [...source].sort(() => Math.random() - 0.5);
-        let tr = [...source].sort(() => Math.random() - 0.5);
-
-        // SHUFFLE CHECK: Ensure Row 1 is not a direct match
-        if(en[0].e === source.find(x => x.t === tr[0].t).e) tr.push(tr.shift());
-
+        saveProgress(); const d = appData[activeStepKey].dialogues[activeIdx];
+        const src = (d.pairs && d.pairs.length >= 4) ? d.pairs : [{e:"Hello", t:"Merhaba"},{e:"Please", t:"Lütfen"},{e:"Thanks", t:"Teşekkürler"},{e:"Yes", t:"Evet"}];
+        let en = [...src].sort(() => Math.random() - 0.5), tr = [...src].sort(() => Math.random() - 0.5);
+        if(en[0].e === src.find(x => x.t === tr[0].t).e) tr.push(tr.shift());
         document.getElementById('content-area').innerHTML = `<div class="match-grid"><div class="match-col" id="m-en"></div><div class="match-col" id="m-tr"></div></div>`;
         en.forEach(p => {
             let b = document.createElement('button'); b.className = 'match-btn match-en'; b.innerText = p.e;
@@ -234,60 +241,40 @@
 
     function selMatch(btn, type, val) {
         document.querySelectorAll('.match-'+type).forEach(x => x.classList.remove('selected'));
-        btn.classList.add('selected');
-        mSel[type] = val;
+        btn.classList.add('selected'); mSel[type] = val;
         if(mSel.e && mSel.t) {
             const d = appData[activeStepKey].dialogues[activeIdx];
-            const source = (d.pairs && d.pairs.length >= 4) ? d.pairs : [{e:"Hello", t:"Merhaba"},{e:"Please", t:"Lütfen"},{e:"Thanks", t:"Teşekkürler"},{e:"Yes", t:"Evet"}];
-            const match = source.find(p => p.e === mSel.e && p.t === mSel.t);
-            if(match) {
-                document.querySelectorAll('.selected').forEach(x => x.classList.add('matched'));
-            } else {
-                document.querySelectorAll('.selected').forEach(x => {
-                    x.style.borderColor = "red";
-                    setTimeout(() => x.style.borderColor = "", 500);
-                });
-            }
-            mSel = { e: null, t: null };
-            setTimeout(() => document.querySelectorAll('.match-btn').forEach(x => x.classList.remove('selected')), 300);
+            const src = (d.pairs.length >= 4) ? d.pairs : [{e:"Hello", t:"Merhaba"},{e:"Please", t:"Lütfen"},{e:"Thanks", t:"Teşekkürler"},{e:"Yes", t:"Evet"}];
+            if(src.find(p => p.e === mSel.e && p.t === mSel.t)) document.querySelectorAll('.selected').forEach(x => x.classList.add('matched'));
+            mSel = { e: null, t: null }; setTimeout(() => document.querySelectorAll('.match-btn').forEach(x => x.classList.remove('selected')), 300);
         }
     }
 
     function modeSpeak() {
-        currentQIdx = 0; attempts = 0;
-        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!Speech) { alert("Please use Google Chrome for Speech Practice."); return; }
-        recognition = new Speech();
-        recognition.lang = 'en-US';
+        currentQIdx = 0; attempts = 0; const S = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!S) { alert("Use Chrome"); return; }
+        recognition = new S(); recognition.lang = 'en-US';
         recognition.onresult = (e) => {
-            const result = e.results[0][0].transcript.toLowerCase();
-            const expected = appData[activeStepKey].dialogues[activeIdx].questions[currentQIdx].a;
-            if(result.includes(expected.split(' ').pop()) || result === expected) {
-                document.getElementById('feed').innerHTML = "<span class='correct'>✅ Correct!</span>";
+            const r = e.results[0][0].transcript.toLowerCase(); const x = appData[activeStepKey].dialogues[activeIdx].questions[currentQIdx].a;
+            if(r.includes(x.split(' ').pop()) || r === x) {
+                document.getElementById('feed').innerHTML = "<span style='color:green'>Correct!</span>";
                 setTimeout(() => { currentQIdx++; attempts = 0; renderQ(); }, 1500);
             } else {
-                attempts++;
-                if(attempts >= 2) {
-                    document.getElementById('feed').innerHTML = `<span class='incorrect'>❌ The answer was: "${expected}"</span>`;
+                attempts++; if(attempts >= 2) {
+                    document.getElementById('feed').innerHTML = `<span style='color:red'>Answer: "${x}"</span>`;
                     setTimeout(() => { currentQIdx++; attempts = 0; renderQ(); }, 3000);
-                } else document.getElementById('feed').innerHTML = "<span class='incorrect'>Try again! Speak clearly.</span>";
+                } else document.getElementById('feed').innerHTML = "Try again!";
             }
-        };
-        renderQ();
+        }; renderQ();
     }
 
     function renderQ() {
-        const qs = appData[activeStepKey].dialogues[activeIdx].questions;
-        if(!qs || currentQIdx >= qs.length) { document.getElementById('content-area').innerHTML = "<h2>🎉 All questions finished!</h2>"; return; }
-        document.getElementById('content-area').innerHTML = `<div class="speech-box"><h3>Agent asks: "${qs[currentQIdx].q}"</h3><button class="mic-btn" onclick="recognition.start()">🎤</button><div id="feed" class="feedback">Attempt ${attempts+1}/2</div></div>`;
+        const q = appData[activeStepKey].dialogues[activeIdx].questions;
+        if(currentQIdx >= q.length) { document.getElementById('content-area').innerHTML = "<h2>🎉 Done!</h2>"; return; }
+        document.getElementById('content-area').innerHTML = `<div class="speech-box"><h3>${q[currentQIdx].q}</h3><button class="mic-btn" onclick="recognition.start()">🎤</button><div id="feed">Attempt ${attempts+1}/2</div></div>`;
     }
 
-    function saveProgress() {
-        if(!progress[activeStepKey]) progress[activeStepKey] = {};
-        progress[activeStepKey][activeIdx] = true;
-        localStorage.setItem('denizTravelProgress', JSON.stringify(progress));
-    }
-
+    function saveProgress() { if(!progress[activeStepKey]) progress[activeStepKey] = {}; progress[activeStepKey][activeIdx] = true; localStorage.setItem('denizTravelProgress', JSON.stringify(progress)); }
     function showLobby() { document.getElementById('step-view').classList.add('hidden'); document.getElementById('lobby-view').classList.remove('hidden'); initLobby(); }
     function showStepView() { openStep(activeStepKey); }
     window.onload = initLobby;

@@ -3,72 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deniz Dora's Travel English</title>
+    <title>Travel Scenarios</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --deniz: #dbeafe; --other: #f3f4f6; --locked: #94a3b8; }
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --deniz: #dbeafe; --other: #f3f4f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
         .hidden { display: none !important; }
         .container { max-width: 1000px; margin: 0 auto; }
         
         /* Lobby Styles */
-        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
-        .step-card.locked { opacity: 0.6; cursor: not-allowed; background: #e5e7eb; }
-        .step-card:not(.locked):hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .step-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-        .step-title { font-weight: bold; font-size: 1rem; }
-        .progress-tag { font-size: 0.75rem; color: var(--primary); margin-top: 8px; font-weight: bold; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 2.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 10px; }
+        .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 15px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .step-card.locked { opacity: 0.5; cursor: not-allowed; background: #e5e7eb; border-style: dashed; }
+        .step-card:not(.locked):hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .step-icon { font-size: 2.8rem; display: block; margin-bottom: 12px; }
+        .step-title { font-weight: bold; font-size: 1.1rem; display: block; min-height: 2.5em; }
+        .progress-tag { font-size: 0.8rem; color: var(--primary); margin-top: 10px; font-weight: bold; background: #eff6ff; padding: 4px; border-radius: 5px; }
 
-        /* Sub-Lobby (Dialogues list) */
-        .back-btn { background: #64748b; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .dialogue-list { display: grid; gap: 10px; }
-        .dialogue-item { background: white; padding: 15px; border-radius: 10px; border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .dialogue-item:hover { background: #f1f5f9; }
-        .status-check { color: #10b981; font-weight: bold; }
+        /* Scenario List */
+        .back-btn { background: #64748b; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-bottom: 25px; font-weight: bold; }
+        .dialogue-list { display: grid; gap: 15px; }
+        .dialogue-item { background: white; padding: 20px; border-radius: 12px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .dialogue-item:hover { background: #f8fafc; border-left-color: #1d4ed8; }
+        .status-check { font-weight: bold; font-size: 0.9rem; }
+        .done { color: #10b981; }
+        .pending { color: #94a3b8; }
 
-        /* Game View */
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
-        .mode-btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
+        /* Game View Content */
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 25px 0; }
+        .mode-btn { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; }
         .btn-listen { background: #3b82f6; } .btn-read { background: #8b5cf6; } .btn-match { background: #f59e0b; } .btn-speak { background: #10b981; }
+        #content-area { background: var(--card); padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-height: 350px; border: 1px solid #e2e8f0; }
         
-        /* Content Area */
-        #content-area { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-height: 300px; }
-        .dialogue-line { margin-bottom: 12px; font-size: 1.1rem; line-height: 1.5; }
-        .speaker-Agent, .speaker-Officer, .speaker-Waiter, .speaker-Driver { color: #475569; font-weight: bold; }
-        .speaker-Deniz { color: var(--primary); font-weight: bold; }
-        .vocab { border-bottom: 2px dashed #8b5cf6; cursor: pointer; position: relative; padding: 0 2px; }
-        .tooltip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; z-index: 10; white-space: nowrap; }
+        /* Dialogue & Vocab */
+        .dialogue-line { margin-bottom: 15px; font-size: 1.2rem; line-height: 1.6; }
+        .speaker-label { font-weight: bold; margin-right: 8px; color: #475569; }
+        .speaker-Deniz { color: var(--primary) !important; }
+        .vocab { border-bottom: 2px dashed #8b5cf6; cursor: pointer; position: relative; color: #6d28d9; font-weight: 500; }
+        .tooltip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; z-index: 100; }
         .vocab:hover .tooltip { display: block; }
 
-        /* Matching Game */
-        .match-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; }
-        .match-col { display: flex; flex-direction: column; gap: 10px; width: 45%; }
-        .match-btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
-        .match-en { background: #ffedd5; color: #c2410c; border: 2px solid #fdba74; }
-        .match-tr { background: #e0f2fe; color: #0369a1; border: 2px solid #7dd3fc; }
-        .match-btn.selected { filter: brightness(0.9); outline: 3px solid var(--primary); }
-        .match-btn.matched { visibility: hidden; }
-
-        /* Speech Mode */
-        .speech-box { text-align: center; }
-        .bot-prompt { font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; }
-        .mic-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; font-size: 1.5rem; cursor: pointer; }
-        .mic-btn.listening { animation: pulse 1s infinite; background: #dc2626; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        /* Match Game */
+        .match-grid { display: flex; justify-content: space-around; gap: 20px; }
+        .match-col { display: flex; flex-direction: column; gap: 12px; width: 45%; }
+        .match-btn { padding: 15px; border-radius: 10px; border: 2px solid transparent; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .match-en { background: #ffedd5; color: #c2410c; border-color: #fdba74; }
+        .match-tr { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+        .selected { outline: 4px solid var(--primary); transform: scale(0.98); }
+        .matched { visibility: hidden; opacity: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="lobby-view">
-        <h1>✈️ Deniz Dora's Travel Adventures</h1>
-        <div class="grid" id="step-grid"></div>
+        <h1>Travel Scenarios</h1>
+        <div class="grid" id="step-grid">
+            </div>
     </div>
 
     <div id="step-view" class="hidden">
-        <button class="back-btn" onclick="showLobby()">← Main Lobby</button>
-        <h2 id="current-step-title">Step Title</h2>
+        <button class="back-btn" onclick="showLobby()">← Back to Lobby</button>
+        <h2 id="current-step-title" style="color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">Step Title</h2>
         <div class="dialogue-list" id="dialogue-list"></div>
     </div>
 
@@ -76,32 +72,37 @@
         <button class="back-btn" onclick="showStepView()">← Back to Scenarios</button>
         <h2 id="current-dialogue-title">Dialogue Title</h2>
         <div class="controls">
-            <button class="mode-btn btn-listen" onclick="modeListen()">🎧 Listen</button>
+            <button class="mode-btn btn-listen" onclick="modeListen()">🎧 Listen Only</button>
             <button class="mode-btn btn-read" onclick="modeRead()">📖 Read & Listen</button>
-            <button class="mode-btn btn-match" onclick="modeMatch()">🧩 Match Game</button>
-            <button class="mode-btn btn-speak" onclick="modeSpeak()">🎤 Answer</button>
+            <button class="mode-btn btn-match" onclick="modeMatch()">🧩 Matching Game</button>
+            <button class="mode-btn btn-speak" onclick="modeSpeak()">🎤 Answer Questions</button>
         </div>
         <div id="content-area"></div>
     </div>
 </div>
 
 <script>
-    // --- APP STATE ---
+    // --- GLOBAL STATE ---
     let progress = JSON.parse(localStorage.getItem('denizTravelProgress')) || {};
     let activeStepKey = '';
-    let activeDialogueIdx = null;
+    let activeDiagIdx = null;
 
-    const stepTitles = [
-        "Airport Check-In", "Boarding the Plane", "In-Flight Service", "Passport Control", 
-        "Customs Clearance", "Airport Transfer", "Hotel Check-In", "Hotel Complaints", 
-        "Arriving at Restaurant", "Ordering Food", "Restaurant Problems", "Asking for Check",
-        "Asking for Directions", "Renting a Car", "Medical Emergency", "Pharmacy", 
-        "Reporting Lost Item", "Back at Hotel", "Shopping", "Return Transfer", "Flight Home"
+    const stepInfo = [
+        { title: "Airport Check-In", icon: "🛫" }, { title: "Boarding the Plane", icon: "🎫" },
+        { title: "In-Flight Service", icon: "☕" }, { title: "Passport Control", icon: "🛂" },
+        { title: "Customs Clearance", icon: "📦" }, { title: "Airport Transfer", icon: "🚕" },
+        { title: "Hotel Check-In", icon: "🏨" }, { title: "Hotel Complaints", icon: "🛠️" },
+        { title: "Arriving at Restaurant", icon: "🍽️" }, { title: "Ordering Food", icon: "📜" },
+        { title: "Restaurant Problems", icon: "🥗" }, { title: "Asking for the Check", icon: "💳" },
+        { title: "Asking for Directions", icon: "🗺️" }, { title: "Renting a Car", icon: "🚗" },
+        { title: "Medical Emergency", icon: "🏥" }, { title: "Pharmacy", icon: "💊" },
+        { title: "Reporting Lost Item", icon: "🔍" }, { title: "Back at Hotel", icon: "🔑" },
+        { title: "Shopping", icon: "🛍️" }, { title: "Return Transfer", icon: "🚐" },
+        { title: "Flight Home", icon: "🏠" }
     ];
 
     const appData = {
         step1: {
-            icon: "🛫",
             dialogues: [
                 {
                     title: "General Check-in",
@@ -132,43 +133,45 @@
         }
     };
 
-    // Initialize the empty steps for the lobby (2-21)
+    // Auto-fill steps 2-21 so the lobby is never empty
     for(let i=2; i<=21; i++) {
-        appData['step'+i] = { icon: "🔒", dialogues: Array(5).fill({title: "Locked Scenario", lines: [], pairs: [], questions: []}) };
+        appData['step'+i] = { dialogues: Array(5).fill({title: "Coming Soon", lines: [], pairs: [], questions: []}) };
     }
 
-    // --- CORE LOGIC ---
+    // --- RENDERERS ---
     function initLobby() {
         const grid = document.getElementById('step-grid');
         grid.innerHTML = '';
         
-        stepTitles.forEach((title, i) => {
+        stepInfo.forEach((info, i) => {
             const stepKey = 'step' + (i+1);
             const prevStepKey = 'step' + i;
-            const completedCount = progress[prevStepKey] ? Object.keys(progress[prevStepKey]).length : 0;
-            const isUnlocked = i === 0 || completedCount >= 2;
-
-            const div = document.createElement('div');
-            div.className = `step-card ${isUnlocked ? '' : 'locked'}`;
-            div.onclick = isUnlocked ? () => showStepView(stepKey) : null;
             
-            const currentDone = progress[stepKey] ? Object.keys(progress[stepKey]).length : 0;
+            // Logic: Step 1 is open. Others open if prev step has >= 2 completed dialogues
+            const prevStepDone = progress[prevStepKey] ? Object.keys(progress[prevStepKey]).length : 0;
+            const isUnlocked = i === 0 || prevStepDone >= 2;
 
-            div.innerHTML = `
-                <span class="step-icon">${isUnlocked ? (appData[stepKey].icon !== "🔒" ? appData[stepKey].icon : "📌") : "🔒"}</span>
-                <span class="step-title">${i+1}. ${title}</span>
-                <div class="progress-tag">${currentDone}/5 Completed</div>
+            const card = document.createElement('div');
+            card.className = `step-card ${isUnlocked ? '' : 'locked'}`;
+            card.onclick = isUnlocked ? () => openStepView(stepKey) : null;
+            
+            const count = progress[stepKey] ? Object.keys(progress[stepKey]).length : 0;
+
+            card.innerHTML = `
+                <span class="step-icon">${isUnlocked ? info.icon : '🔒'}</span>
+                <span class="step-title">${i+1}. ${info.title}</span>
+                <div class="progress-tag">${count}/5 Done</div>
             `;
-            grid.appendChild(div);
+            grid.appendChild(card);
         });
     }
 
-    function showStepView(stepKey) {
+    function openStepView(stepKey) {
         activeStepKey = stepKey;
         document.getElementById('lobby-view').classList.add('hidden');
         document.getElementById('step-view').classList.remove('hidden');
         document.getElementById('game-view').classList.add('hidden');
-        document.getElementById('current-step-title').innerText = stepTitles[parseInt(stepKey.replace('step',''))-1];
+        document.getElementById('current-step-title').innerText = stepInfo[parseInt(stepKey.replace('step',''))-1].title;
         
         const list = document.getElementById('dialogue-list');
         list.innerHTML = '';
@@ -176,35 +179,94 @@
             const isDone = progress[stepKey] && progress[stepKey][idx];
             list.innerHTML += `
                 <div class="dialogue-item" onclick="openGame(${idx})">
-                    <span>${idx+1}. ${d.title}</span>
-                    <span class="status-check">${isDone ? '✅ Done' : '⏳ Pending'}</span>
+                    <span style="font-weight:bold;">${idx+1}. ${d.title}</span>
+                    <span class="status-check ${isDone ? 'done' : 'pending'}">${isDone ? '✅ Completed' : '⏳ To Do'}</span>
                 </div>`;
         });
     }
 
     function openGame(idx) {
-        activeDialogueIdx = idx;
+        activeDiagIdx = idx;
         document.getElementById('step-view').classList.add('hidden');
         document.getElementById('game-view').classList.remove('hidden');
         document.getElementById('current-dialogue-title').innerText = appData[activeStepKey].dialogues[idx].title;
-        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center; color:#94a3b8;">Choose a button to start!</h3>';
+        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center; color:#94a3b8; margin-top:100px;">Tap a button above to start practicing!</h3>';
     }
 
-    function markDialogueComplete() {
+    function markComplete() {
         if(!progress[activeStepKey]) progress[activeStepKey] = {};
-        progress[activeStepKey][activeDialogueIdx] = true;
+        progress[activeStepKey][activeDiagIdx] = true;
         localStorage.setItem('denizTravelProgress', JSON.stringify(progress));
     }
 
     // --- GAME MODES ---
-    let audio = null;
+    let audioObj = null;
     function modeListen() {
-        if(audio) audio.pause();
-        audio = new Audio(appData[activeStepKey].dialogues[activeDialogueIdx].audio);
-        audio.play();
-        markDialogueComplete();
-        document.getElementById('content-area').innerHTML = "<h3>🎧 Playing Audio...</h3>";
+        if(audioObj) audioObj.pause();
+        audioObj = new Audio(appData[activeStepKey].dialogues[activeDiagIdx].audio);
+        audioObj.play();
+        markComplete();
+        document.getElementById('content-area').innerHTML = `<div style="text-align:center; padding-top:50px;"><h2>🎧 Listening Mode</h2><p>Listen to the conversation carefully.</p></div>`;
     }
 
     function modeRead() {
         modeListen();
+        let html = '<h3 style="border-bottom: 1px solid #eee; padding-bottom:10px;">Read & Listen</h3>';
+        appData[activeStepKey].dialogues[activeDiagIdx].lines.forEach(l => {
+            html += `<div class="dialogue-line"><span class="speaker-label speaker-${l.s}">${l.s}:</span> ${l.t}</div>`;
+        });
+        document.getElementById('content-area').innerHTML = html;
+    }
+
+    let matchTrack = { e: null, t: null };
+    function modeMatch() {
+        markComplete();
+        const d = appData[activeStepKey].dialogues[activeDiagIdx];
+        let en = [...d.pairs].sort(() => Math.random() - 0.5);
+        let tr = [...d.pairs].sort(() => Math.random() - 0.5);
+        
+        document.getElementById('content-area').innerHTML = `<div class="match-grid"><div class="match-col" id="m-en"></div><div class="match-col" id="m-tr"></div></div>`;
+        
+        en.forEach(p => {
+            let b = document.createElement('button'); b.className = 'match-btn match-en'; b.innerText = p.e;
+            b.onclick = () => { selectMatch(b, 'e', p.e) }; document.getElementById('m-en').appendChild(b);
+        });
+        tr.forEach(p => {
+            let b = document.createElement('button'); b.className = 'match-btn match-tr'; b.innerText = p.t;
+            b.onclick = () => { selectMatch(b, 't', p.t) }; document.getElementById('m-tr').appendChild(b);
+        });
+    }
+
+    function selectMatch(btn, type, val) {
+        document.querySelectorAll('.match-'+type).forEach(x => x.classList.remove('selected'));
+        btn.classList.add('selected');
+        matchTrack[type] = val;
+        if(matchTrack.e && matchTrack.t) {
+            const isMatch = appData[activeStepKey].dialogues[activeDiagIdx].pairs.find(p => p.e === matchTrack.e && p.t === matchTrack.t);
+            if(isMatch) {
+                document.querySelectorAll('.selected').forEach(x => x.classList.add('matched'));
+            }
+            matchTrack = { e: null, t: null };
+            setTimeout(() => document.querySelectorAll('.match-btn').forEach(x => x.classList.remove('selected')), 300);
+        }
+    }
+
+    // Placeholder for Speech Mode
+    function modeSpeak() {
+        markComplete();
+        document.getElementById('content-area').innerHTML = `<div style="text-align:center; padding-top:50px;"><h2>🎤 Speaking Practice</h2><p>This mode uses your microphone. (Under construction for mobile compatibility)</p></div>`;
+    }
+
+    // Navigation
+    function showLobby() { 
+        document.getElementById('step-view').classList.add('hidden'); 
+        document.getElementById('lobby-view').classList.remove('hidden'); 
+        initLobby(); 
+    }
+    function showStepView() { openStepView(activeStepKey); }
+
+    // FORCE INITIALIZATION ON LOAD
+    window.onload = initLobby;
+</script>
+</body>
+</html>

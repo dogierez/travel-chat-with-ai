@@ -11,16 +11,17 @@
         .container { max-width: 1000px; margin: 0 auto; }
         h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 2.2rem; }
         
-        /* Lobby */
+        /* Lobby Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
         .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .step-card.locked { opacity: 0.5; cursor: not-allowed; background: #e5e7eb; border-style: dashed; }
         .step-card:not(.locked):hover { border-color: var(--primary); transform: translateY(-3px); }
         .step-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+        .step-title { font-weight: bold; font-size: 1rem; display: block; min-height: 2.4em; }
         .progress-tag { font-size: 0.8rem; color: var(--primary); font-weight: bold; margin-top: 10px; background: #eff6ff; padding: 4px; border-radius: 5px; }
 
-        /* Navigation */
-        .back-btn { background: #64748b; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+        /* Scenario List */
+        .back-btn { background: #64748b; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
         .dialogue-item { background: white; padding: 18px; border-radius: 10px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; margin-bottom: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         /* Game Modes */
@@ -86,37 +87,42 @@
 
 <script>
     let progress = JSON.parse(localStorage.getItem('denizTravelProgress')) || {};
-    let activeStepKey = '', activeIdx = null, currentAudio = null;
+    let activeStepKey = '', activeIdx = null;
     let recognition, currentQIdx = 0, attempts = 0;
 
-    const stepInfo = [
-        { t: "Airport Check-In", i: "🛫" }, { t: "Boarding the Plane", i: "🎫" }, { t: "In-Flight Service", i: "☕" },
-        { t: "Passport Control", i: "🛂" }, { t: "Customs Clearance", i: "📦" }, { t: "Airport Transfer", i: "🚕" },
-        { t: "Hotel Check-In", i: "🏨" }, { t: "Hotel Complaints", i: "🛠️" }, { t: "Restaurant Entry", i: "🍽️" },
-        { t: "Ordering Food", i: "📜" }, { t: "Food Problems", i: "🥗" }, { t: "The Bill", i: "💳" },
-        { t: "Directions", i: "🗺️" }, { t: "Car Rental", i: "🚗" }, { t: "Doctor", i: "🏥" },
-        { t: "Pharmacy", i: "💊" }, { t: "Lost Items", i: "🔍" }, { t: "Back at Hotel", i: "🔑" },
-        { t: "Shopping", i: "🛍️" }, { t: "Return Ride", i: "🚐" }, { t: "Flight Home", i: "🏠" }
+    const stepTitles = [
+        "Airport Check-In", "Boarding the Plane", "In-Flight Service", "Passport Control", 
+        "Customs Clearance", "Airport Transfer", "Hotel Check-In", "Hotel Complaints", 
+        "Arriving at Restaurant", "Ordering Food", "Restaurant Problems", "Asking for Check",
+        "Asking for Directions", "Renting a Car", "Medical Emergency", "Pharmacy", 
+        "Reporting Lost Item", "Back at Hotel", "Shopping", "Return Ride", "Flight Home"
     ];
+
+    const stepIcons = ["🛫", "🎫", "☕", "🛂", "📦", "🚕", "🏨", "🛠️", "🍽️", "📜", "🥗", "💳", "🗺️", "🚗", "🏥", "💊", "🔍", "🔑", "🛍️", "🚐", "🏠"];
 
     const appData = {
         step1: {
             dialogues: [
                 {
                     title: "1.1 General Check-in",
-                    audio: "./Step_1_1_General_Check-in.mp3",
+                    audio: "Step_1_1_General_Check-in_dialogues.mp3",
                     lines: [
                         { s: "Agent", t: "Hello, where are you <span class='vocab' onclick='modeMatch()'>flying<span class='tooltip'>uçmak (v)</span></span> today?" },
                         { s: "Deniz", t: "Hello, I am flying to London." },
-                        { s: "Agent", t: "Can I see your <span class='vocab' onclick='modeMatch()'>passport<span class='tooltip'>pasaport (n)</span></span>, please?" },
+                        { s: "Agent", t: "Can I see your <span class='vocab' onclick='modeMatch' onclick='modeMatch()'>passport<span class='tooltip'>pasaport (n)</span></span>, please?" },
                         { s: "Deniz", t: "Yes, here is my passport." }
                     ],
                     pairs: [{e:"flying", t:"uçmak (v)"},{e:"passport", t:"pasaport (n)"},{e:"traveling", t:"seyahat etmek (v)"},{e:"alone", t:"yalnız (adj)"},{e:"check-in", t:"kayıt (v)"},{e:"today", t:"bugün (adv)"},{e:"see", t:"bakmak (v)"},{e:"please", t:"lütfen (adv)"},{e:"yes", t:"evet (adv)"},{e:"hello", t:"merhaba (int)"}],
-                    questions: [{q: "Where are you flying today?", a: "hello i am flying to london"}]
+                    questions: [
+                        {q: "Where are you flying today?", a: "hello i am flying to london"},
+                        {q: "Can I see your passport?", a: "yes here is my passport"},
+                        {q: "Are you traveling alone?", a: "yes it is just me"},
+                        {q: "Have a nice trip!", a: "thank you very much"}
+                    ]
                 },
                 {
                     title: "1.2 Checking Baggage",
-                    audio: "./Step_1_2_Checking_Baggage.mp3",
+                    audio: "Step_1_2_Checking_Baggage_dialogues.mp3",
                     lines: [
                         { s: "Agent", t: "Do you have <span class='vocab' onclick='modeMatch()'>bags<span class='tooltip'>çantalar (n)</span></span> to <span class='vocab' onclick='modeMatch()'>check in<span class='tooltip'>kayıt yaptırmak (v)</span></span>?" },
                         { s: "Deniz", t: "Yes, I have one <span class='vocab' onclick='modeMatch()'>large<span class='tooltip'>büyük (adj)</span></span> suitcase." }
@@ -124,43 +130,16 @@
                     pairs: [{e:"bags", t:"çantalar (n)"},{e:"check in", t:"kayıt yaptırmak (v)"},{e:"large", t:"büyük (adj)"},{e:"suitcase", t:"valiz (n)"},{e:"have", t:"sahip olmak (v)"},{e:"yes", t:"evet (adv)"},{e:"one", t:"bir (adj)"},{e:"big", t:"büyük (adj)"}],
                     questions: [{q: "Do you have bags to check in?", a: "yes i have one large suitcase"}]
                 },
-                {
-                    title: "1.3 Overweight Luggage",
-                    audio: "./Step_1_3_Overweight_Luggage.mp3",
-                    lines: [
-                        { s: "Agent", t: "Your bag is <span class='vocab' onclick='modeMatch()'>heavy<span class='tooltip'>ağır (adj)</span></span>. It is <span class='vocab' onclick='modeMatch()'>overweight<span class='tooltip'>sınırı aşan (adj)</span></span>." },
-                        { s: "Deniz", t: "Can I <span class='vocab' onclick='modeMatch()'>pay<span class='tooltip'>ödemek (v)</span></span> the <span class='vocab' onclick='modeMatch()'>extra<span class='tooltip'>fazla/ek (adj)</span></span> fee?" }
-                    ],
-                    pairs: [{e:"heavy", t:"ağır (adj)"},{e:"overweight", t:"sınırı aşan (adj)"},{e:"pay", t:"ödemek (v)"},{e:"extra", t:"ek (adj)"},{e:"fee", t:"ücret (n)"},{e:"sorry", t:"üzgün (adj)"},{e:"bag", t:"çanta (n)"},{e:"limit", t:"sınır (n)"}],
-                    questions: [{q: "Your bag is overweight.", a: "can i pay the extra fee"}]
-                },
-                {
-                    title: "1.4 Seat Preference",
-                    audio: "./Step_1_4_Seat_Preference.mp3",
-                    lines: [
-                        { s: "Agent", t: "Do you <span class='vocab' onclick='modeMatch()'>prefer<span class='tooltip'>tercih etmek (v)</span></span> a <span class='vocab' onclick='modeMatch()'>window<span class='tooltip'>pencere (n)</span></span> or an <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span> seat?" },
-                        { s: "Deniz", t: "I want a window seat in the <span class='vocab' onclick='modeMatch()'>front<span class='tooltip'>ön (adj)</span></span>." }
-                    ],
-                    pairs: [{e:"prefer", t:"tercih etmek (v)"},{e:"window", t:"pencere (n)"},{e:"aisle", t:"koridor (n)"},{e:"front", t:"ön (adj)"},{e:"seat", t:"koltuk (n)"},{e:"want", t:"istemek (v)"},{e:"available", t:"müsait (adj)"},{e:"back", t:"arka (adj)"}],
-                    questions: [{q: "Window or aisle?", a: "i want a window seat"}]
-                },
-                {
-                    title: "1.5 Boarding Time",
-                    audio: "./Step_1_5_Boarding_Time_Inquiry.mp3",
-                    lines: [
-                        { s: "Deniz", t: "When does <span class='vocab' onclick='modeMatch()'>boarding<span class='tooltip'>uçağa biniş (n)</span></span> <span class='vocab' onclick='modeMatch()'>start<span class='tooltip'>başlamak (v)</span></span>?" },
-                        { s: "Agent", t: "It is <span class='vocab' onclick='modeMatch()'>departing<span class='tooltip'>ayrılmak (v)</span></span> <span class='vocab' onclick='modeMatch()'>on time<span class='tooltip'>vaktinde (adj)</span></span>." }
-                    ],
-                    pairs: [{e:"boarding", t:"uçağa biniş (n)"},{e:"start", t:"başlamak (v)"},{e:"departing", t:"ayrılmak (v)"},{e:"on time", t:"vaktinde (adj)"},{e:"gate", t:"kapı (n)"},{e:"time", t:"vakit (n)"},{e:"delayed", t:"gecikmiş (adj)"},{e:"early", t:"erken (adj)"}],
-                    questions: [{q: "When does boarding start?", a: "boarding starts at ten thirty"}]
-                }
+                { title: "1.3 Overweight Luggage", audio: "Step_1_3_Overweight_Luggage_dialogues.mp3", lines: [], pairs: [], questions: [] },
+                { title: "1.4 Seat Preference", audio: "Step_1_4_Seat_Preference_dialogues.mp3", lines: [], pairs: [], questions: [] },
+                { title: "1.5 Boarding Time", audio: "Step_1_5_Boarding_Time_Inquiry_dialogues.mp3", lines: [], pairs: [], questions: [] }
             ]
         },
         step2: {
             dialogues: [
                 {
                     title: "2.1 Finding the Seat",
-                    audio: "./Step_2_1_Finding_the_Seat.mp3",
+                    audio: "Step_2_1_Finding_the_Seat_dialogues.mp3",
                     lines: [
                         { s: "Flight Attendant", t: "Welcome! <span class='vocab' onclick='modeMatch()'>Walk<span class='tooltip'>yürümek (v)</span></span> down this <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span>." },
                         { s: "Deniz", t: "Is it <span class='vocab' onclick='modeMatch()'>next to<span class='tooltip'>yanında (adj)</span></span> the window?" }
@@ -168,25 +147,24 @@
                     pairs: [{e:"walk", t:"yürümek (v)"},{e:"aisle", t:"koridor (n)"},{e:"next to", t:"yanında (adj)"},{e:"window", t:"pencere (n)"},{e:"find", t:"bulmak (v)"},{e:"left", t:"sol (adj)"},{e:"right", t:"sağ (adj)"},{e:"seat", t:"koltuk (n)"}],
                     questions: [{q: "Walk down the aisle.", a: "is it next to the window"}]
                 },
-                { title: "2.2 Overhead Bin", audio: "./Step_2_2_Overhead_Bin_Space.mp3", lines: [], pairs: [], questions: [] },
-                { title: "2.3 Wrong Seat", audio: "./Step_2_3_Wrong_Seat.mp3", lines: [], pairs: [], questions: [] },
-                { title: "2.4 Blanket Request", audio: "./Step_2_4_Asking_for_a_Blanket.mp3", lines: [], pairs: [], questions: [] },
-                { title: "2.5 Safety Check", audio: "./Step_2_5_Safety_Check.mp3", lines: [], pairs: [], questions: [] }
+                { title: "2.2 Overhead Bin", audio: "Step_2_2_Overhead_Bin_Space_dialogues.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.3 Wrong Seat", audio: "Step_2_3_Wrong_Seat_dialogues.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.4 Blanket Request", audio: "Step_2_4_Asking_for_a_Blanket_dialogues.mp3", lines: [], pairs: [], questions: [] },
+                { title: "2.5 Safety Check", audio: "Step_2_5_Safety_Check_dialogues.mp3", lines: [], pairs: [], questions: [] }
             ]
         }
     };
 
-    // Auto-fill template for 3-21
     for(let i=3; i<=21; i++) appData['step'+i] = { dialogues: Array(5).fill({title: "Coming Soon", lines: [], pairs: [], questions: []}) };
 
     function initLobby() {
         const grid = document.getElementById('step-grid'); grid.innerHTML = '';
-        stepInfo.forEach((info, i) => {
+        stepTitles.forEach((title, i) => {
             const key = 'step'+(i+1), prev = 'step'+i;
             const isUnlocked = i === 0 || (progress[prev] && Object.keys(progress[prev]).length >= 2);
             grid.innerHTML += `<div class="step-card ${isUnlocked ? '' : 'locked'}" onclick="${isUnlocked ? `openStep('${key}')` : ''}">
-                <span class="step-icon">${isUnlocked ? info.i : '🔒'}</span>
-                <span class="step-title">${i+1}. ${info.t}</span>
+                <span class="step-icon">${isUnlocked ? stepIcons[i] : '🔒'}</span>
+                <span class="step-title">${i+1}. ${title}</span>
                 <div class="progress-tag">${progress[key] ? Object.keys(progress[key]).length : 0}/5 Done</div></div>`;
         });
     }
@@ -194,7 +172,7 @@
     function openStep(key) {
         activeStepKey = key; document.getElementById('lobby-view').classList.add('hidden');
         document.getElementById('step-view').classList.remove('hidden'); document.getElementById('game-view').classList.add('hidden');
-        document.getElementById('step-title').innerText = stepInfo[parseInt(key.replace('step',''))-1].t;
+        document.getElementById('step-title').innerText = stepTitles[parseInt(key.replace('step',''))-1];
         const list = document.getElementById('dialogue-list'); list.innerHTML = '';
         appData[key].dialogues.forEach((d, idx) => {
             const isDone = progress[key] && progress[key][idx];
@@ -205,12 +183,12 @@
     function openGame(idx) {
         activeIdx = idx; document.getElementById('step-view').classList.add('hidden'); document.getElementById('game-view').classList.remove('hidden');
         document.getElementById('game-title').innerText = appData[activeStepKey].dialogues[idx].title;
-        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center;margin-top:100px;color:#94a3b8;">Choose a mode!</h3>';
+        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center;margin-top:100px;color:#94a3b8;">Select a mode!</h3>';
     }
 
     function modeListen() {
-        const p = document.getElementById('master-player'); p.src = appData[activeStepKey].dialogues[activeIdx].audio;
-        p.play().catch(e => console.error("Audio failed:", e)); saveProgress();
+        const p = document.getElementById('master-player'); p.src = "./" + appData[activeStepKey].dialogues[activeIdx].audio;
+        p.play().catch(e => console.error("Audio path error:", p.src)); saveProgress();
         document.getElementById('content-area').innerHTML = `<div style="text-align:center;padding-top:60px;"><h2>🎧 Listening...</h2></div>`;
     }
 
@@ -226,8 +204,17 @@
     function modeMatch() {
         saveProgress(); const d = appData[activeStepKey].dialogues[activeIdx];
         const src = (d.pairs && d.pairs.length >= 4) ? d.pairs : [{e:"Hello", t:"Merhaba"},{e:"Please", t:"Lütfen"},{e:"Thanks", t:"Teşekkürler"},{e:"Yes", t:"Evet"}];
-        let en = [...src].sort(() => Math.random() - 0.5), tr = [...src].sort(() => Math.random() - 0.5);
-        if(en[0].e === src.find(x => x.t === tr[0].t).e) tr.push(tr.shift());
+        
+        let en = [...src].sort(() => Math.random() - 0.5);
+        let tr = [...src].sort(() => Math.random() - 0.5);
+
+        // STRIKE: Shuffle until no top-level match exists
+        let maxShuffles = 10;
+        while(en[0].e === src.find(x => x.t === tr[0].t).e && maxShuffles > 0) {
+            tr.sort(() => Math.random() - 0.5);
+            maxShuffles--;
+        }
+
         document.getElementById('content-area').innerHTML = `<div class="match-grid"><div class="match-col" id="m-en"></div><div class="match-col" id="m-tr"></div></div>`;
         en.forEach(p => {
             let b = document.createElement('button'); b.className = 'match-btn match-en'; b.innerText = p.e;

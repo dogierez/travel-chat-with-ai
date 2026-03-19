@@ -1,1 +1,335 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deniz Dora's Travel English</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --deniz: #dbeafe; --other: #f3f4f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+        
+        /* Layouts */
+        #lobby, #scenario-view { max-width: 900px; margin: 0 auto; }
+        .hidden { display: none !important; }
+        
+        /* Lobby Grid */
+        h1 { text-align: center; color: var(--primary); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 30px; }
+        .lobby-btn { background: var(--card); border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .lobby-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .lobby-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .lobby-title { font-size: 0.9rem; font-weight: bold; }
+
+        /* Scenario Header & Controls */
+        .back-btn { background: #64748b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
+        .mode-btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
+        .btn-listen { background: #3b82f6; }
+        .btn-read { background: #8b5cf6; }
+        .btn-match { background: #f59e0b; }
+        .btn-speak { background: #10b981; }
+        .mode-btn:hover { filter: brightness(1.1); }
+
+        /* Content Area */
+        #content-area { background: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-height: 300px; }
+        
+        /* Read & Listen Mode */
+        .dialogue-line { margin-bottom: 12px; font-size: 1.1rem; line-height: 1.5; }
+        .speaker-Agent { color: #475569; font-weight: bold; }
+        .speaker-Deniz { color: var(--primary); font-weight: bold; }
+        .vocab { border-bottom: 2px dashed #8b5cf6; cursor: pointer; position: relative; }
+        .vocab:hover { background: #ede9fe; }
+        .tooltip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; z-index: 10; }
+        .vocab:hover .tooltip { display: block; }
+
+        /* Matching Game */
+        .match-container { display: flex; justify-content: space-around; gap: 20px; }
+        .match-column { display: flex; flex-direction: column; gap: 10px; width: 45%; }
+        .match-btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+        .match-en { background: #ffedd5; color: #c2410c; border: 2px solid #fdba74; }
+        .match-tr { background: #e0f2fe; color: #0369a1; border: 2px solid #7dd3fc; }
+        .match-btn.selected { filter: brightness(0.9); transform: scale(0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .match-btn.matched { visibility: hidden; }
+
+        /* Speech Mode */
+        .speech-box { text-align: center; }
+        .bot-prompt { font-size: 1.3rem; font-weight: bold; color: #475569; margin-bottom: 20px; }
+        .mic-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 80px; height: 80px; font-size: 2rem; cursor: pointer; margin-bottom: 20px; }
+        .mic-btn.listening { animation: pulse 1.5s infinite; background: #dc2626; }
+        .feedback { font-size: 1.1rem; font-weight: bold; min-height: 24px; }
+        .correct { color: #10b981; }
+        .incorrect { color: #ef4444; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lobby">
+        <h1>Travel English Adventures</h1>
+        <div class="grid" id="lobby-grid">
+            </div>
+    </div>
+
+    <div id="scenario-view" class="hidden">
+        <button class="back-btn" onclick="showLobby()">← Back to Lobby</button>
+        <h2 id="scenario-title">Scenario Title</h2>
+        
+        <div class="controls">
+            <button class="mode-btn btn-listen" onclick="modeListen()">🎧 Listen Only</button>
+            <button class="mode-btn btn-read" onclick="modeRead()">📖 Read & Listen</button>
+            <button class="mode-btn btn-match" onclick="modeMatch()">🧩 Play Matching Game</button>
+            <button class="mode-btn btn-speak" onclick="modeSpeak()">🎤 Answer Questions</button>
+        </div>
+
+        <div id="content-area">
+            <h3 style="text-align: center; color: #94a3b8; margin-top: 50px;">Select a mode above to begin!</h3>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA STRUCTURE (The Engine) ---
+        const appData = {
+            step1: {
+                id: 1, icon: "🛫", title: "1. General Check-In",
+                audioFile: "Travel_Gallery_Audio/Step_1_1_General_Check-in.mp3",
+                dialogue: [
+                    { speaker: "Agent", text: "Hello, where are you <span class='vocab'>flying<span class='tooltip'>uçmak</span></span> today?" },
+                    { speaker: "Deniz", text: "Hello, I am flying to London." },
+                    { speaker: "Agent", text: "Can I see your <span class='vocab'>passport<span class='tooltip'>pasaport</span></span> and ticket, please?" },
+                    { speaker: "Deniz", text: "Yes, here is my passport." },
+                    { speaker: "Agent", text: "Thank you. Are you traveling <span class='vocab'>alone<span class='tooltip'>yalnız</span></span>?" },
+                    { speaker: "Deniz", text: "Yes, it is just me." },
+                    { speaker: "Agent", text: "Okay, here is your <span class='vocab'>boarding pass<span class='tooltip'>biniş kartı</span></span>." },
+                    { speaker: "Deniz", text: "Thank you very much." }
+                ],
+                matchingPairs: [
+                    { en: "flying", tr: "uçmak" },
+                    { en: "passport", tr: "pasaport" },
+                    { en: "traveling", tr: "seyahat etmek" },
+                    { en: "alone", tr: "yalnız" },
+                    { en: "boarding pass", tr: "biniş kartı" }
+                ],
+                questions: [
+                    { prompt: "Hello, where are you flying today?", expected: "Hello I am flying to London" },
+                    { prompt: "Can I see your passport and ticket, please?", expected: "Yes here is my passport" },
+                    { prompt: "Are you traveling alone?", expected: "Yes it is just me" },
+                    { prompt: "Okay, here is your boarding pass.", expected: "Thank you very much" }
+                ]
+            }
+            // You will paste step 2 through 105 here later
+        };
+
+        let currentAudio = null;
+        let activeScenario = appData.step1; 
+
+        // --- NAVIGATION ---
+        function initLobby() {
+            const grid = document.getElementById('lobby-grid');
+            
+            // Add Step 1 to the grid
+            grid.innerHTML += `<div class="lobby-btn" onclick="openScenario('step1')">
+                <span class="lobby-icon">${appData.step1.icon}</span>
+                <span class="lobby-title">${appData.step1.title}</span>
+            </div>`;
+            
+            // Add placeholder buttons for the rest of the steps so the lobby looks complete
+            for(let i=2; i<=105; i++) {
+                grid.innerHTML += `<div class="lobby-btn" style="opacity:0.5"><span class="lobby-icon">🔒</span><span class="lobby-title">Scenario ${i}</span></div>`;
+            }
+        }
+
+        function openScenario(stepKey) {
+            activeScenario = appData[stepKey];
+            document.getElementById('lobby').classList.add('hidden');
+            document.getElementById('scenario-view').classList.remove('hidden');
+            document.getElementById('scenario-title').innerText = activeScenario.title;
+            document.getElementById('content-area').innerHTML = '<h3 style="text-align: center; color: #94a3b8; margin-top: 50px;">Select a mode above to begin!</h3>';
+            if(currentAudio) currentAudio.pause();
+        }
+
+        function showLobby() {
+            document.getElementById('scenario-view').classList.add('hidden');
+            document.getElementById('lobby').classList.remove('hidden');
+            if(currentAudio) currentAudio.pause();
+        }
+
+        // --- MODES ---
+        function modeListen() {
+            if(currentAudio) currentAudio.pause();
+            currentAudio = new Audio(activeScenario.audioFile);
+            currentAudio.play();
+            document.getElementById('content-area').innerHTML = `
+                <div style="text-align:center; padding: 40px;">
+                    <h2 style="color: var(--primary);">🎧 Playing Audio...</h2>
+                    <p>Listen closely to the conversation.</p>
+                </div>`;
+        }
+
+        function modeRead() {
+            if(currentAudio) currentAudio.pause();
+            currentAudio = new Audio(activeScenario.audioFile);
+            currentAudio.play();
+            
+            let html = `<h3>Read and Listen</h3>`;
+            activeScenario.dialogue.forEach(line => {
+                html += `<div class="dialogue-line"><span class="speaker-${line.speaker}">${line.speaker}:</span> ${line.text}</div>`;
+            });
+            document.getElementById('content-area').innerHTML = html;
+        }
+
+        // --- MATCHING GAME LOGIC ---
+        let matchSelection = { en: null, tr: null };
+        function modeMatch() {
+            if(currentAudio) currentAudio.pause();
+            
+            let enWords = [...activeScenario.matchingPairs].sort(() => Math.random() - 0.5);
+            let trWords = [...activeScenario.matchingPairs].sort(() => Math.random() - 0.5);
+
+            let html = `<h3 style="text-align:center; margin-bottom: 20px;">Match the English word to the Turkish meaning!</h3>
+                        <div class="match-container">
+                            <div class="match-column" id="col-en"></div>
+                            <div class="match-column" id="col-tr"></div>
+                        </div>`;
+            document.getElementById('content-area').innerHTML = html;
+
+            const colEn = document.getElementById('col-en');
+            const colTr = document.getElementById('col-tr');
+
+            enWords.forEach(pair => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn match-en';
+                btn.innerText = pair.en;
+                btn.onclick = () => handleMatchClick(btn, 'en', pair.en);
+                colEn.appendChild(btn);
+            });
+
+            trWords.forEach(pair => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn match-tr';
+                btn.innerText = pair.tr;
+                btn.onclick = () => handleMatchClick(btn, 'tr', pair.tr);
+                colTr.appendChild(btn);
+            });
+        }
+
+        function handleMatchClick(btn, lang, text) {
+            document.querySelectorAll(`.match-${lang}`).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            matchSelection[lang] = text;
+
+            if (matchSelection.en && matchSelection.tr) {
+                const isMatch = activeScenario.matchingPairs.some(p => p.en === matchSelection.en && p.tr === matchSelection.tr);
+                if (isMatch) {
+                    document.querySelector('.match-en.selected').classList.add('matched');
+                    document.querySelector('.match-tr.selected').classList.add('matched');
+                } else {
+                    document.querySelector('.match-en.selected').style.backgroundColor = '#fecaca';
+                    document.querySelector('.match-tr.selected').style.backgroundColor = '#fecaca';
+                    setTimeout(() => {
+                        document.querySelectorAll('.match-btn').forEach(b => {
+                            b.style.backgroundColor = '';
+                            b.classList.remove('selected');
+                        });
+                    }, 500);
+                }
+                matchSelection = { en: null, tr: null };
+            }
+        }
+
+        // --- SPEECH LOGIC ---
+        let currentQuestionIdx = 0;
+        let attempts = 0;
+        let recognition;
+
+        function modeSpeak() {
+            if(currentAudio) currentAudio.pause();
+            currentQuestionIdx = 0;
+            attempts = 0;
+            
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!window.SpeechRecognition) {
+                document.getElementById('content-area').innerHTML = "<h3 style='color:red;'>Sorry, your browser doesn't support Speech Recognition. Please use Google Chrome.</h3>";
+                return;
+            }
+            recognition = new window.SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g,"");
+                checkAnswer(transcript);
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                document.getElementById('mic-btn').classList.remove('listening');
+            };
+
+            renderSpeechQuestion();
+        }
+
+        function renderSpeechQuestion() {
+            if (currentQuestionIdx >= activeScenario.questions.length) {
+                document.getElementById('content-area').innerHTML = `<h2 style="text-align:center; color:#10b981;">🎉 Great Job Deniz! You finished the questions!</h2>`;
+                return;
+            }
+
+            let q = activeScenario.questions[currentQuestionIdx];
+            document.getElementById('content-area').innerHTML = `
+                <div class="speech-box">
+                    <p style="color: #64748b; font-weight: bold;">Listen and Reply (Attempt ${attempts + 1}/2)</p>
+                    <div class="bot-prompt">Agent: "${q.prompt}"</div>
+                    <button class="mic-btn" id="mic-btn" onclick="startListening()">🎤</button>
+                    <div class="feedback" id="speech-feedback">Tap the microphone and speak your answer.</div>
+                </div>
+            `;
+        }
+
+        function startListening() {
+            document.getElementById('mic-btn').classList.add('listening');
+            document.getElementById('speech-feedback').innerText = "Listening...";
+            document.getElementById('speech-feedback').className = "feedback";
+            recognition.start();
+        }
+
+        function checkAnswer(spokenText) {
+            let expected = activeScenario.questions[currentQuestionIdx].expected.toLowerCase().replace(/[.,?!]/g,"");
+            let feedbackEl = document.getElementById('speech-feedback');
+            
+            if (spokenText.includes(expected) || expected.includes(spokenText)) {
+                feedbackEl.innerText = "✅ Correct!";
+                feedbackEl.className = "feedback correct";
+                setTimeout(() => {
+                    currentQuestionIdx++;
+                    attempts = 0;
+                    renderSpeechQuestion();
+                }, 2000);
+            } else {
+                attempts++;
+                if (attempts >= 2) {
+                    feedbackEl.innerText = `❌ The correct answer was: "${activeScenario.questions[currentQuestionIdx].expected}"`;
+                    feedbackEl.className = "feedback incorrect";
+                    setTimeout(() => {
+                        currentQuestionIdx++;
+                        attempts = 0;
+                        renderSpeechQuestion();
+                    }, 4000);
+                } else {
+                    feedbackEl.innerText = `I heard: "${spokenText}". Try again!`;
+                    feedbackEl.className = "feedback incorrect";
+                    setTimeout(() => { renderSpeechQuestion(); }, 3000);
+                }
+            }
+        }
+
+        // Start App
+        initLobby();
+    </script>
+</body>
+</html>

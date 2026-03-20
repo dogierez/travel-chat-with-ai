@@ -71,6 +71,10 @@ function generateLobby() {
                 playerZone.classList.remove('hidden');
                 document.getElementById('now-playing-title').innerText = sub.title;
                 audio.src = sub.file;
+                
+                // SPEED BOOST APPLIED HERE
+                audio.playbackRate = 1.1; 
+                
                 wordBucket = [];
                 currentLessonData = lessonData[sub.file];
             };

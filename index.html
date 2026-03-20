@@ -23,7 +23,13 @@
 
     <div id="main-app" class="screen hidden">
         <h1 id="app-title" style="color: #ccff00; font-size: 36px; margin-bottom: 20px;">Travel Chat</h1>
-        <div id="stations-grid" class="grid-container"></div>
+        
+        <div id="categories-grid" class="grid-container"></div>
+        
+        <div id="sub-grid" class="grid-container hidden">
+            <button id="btn-back-categories" class="back-btn" style="margin-bottom: 20px;">⬅ BACK TO SCENARIOS</button>
+            <div id="sub-items-container"></div>
+        </div>
         
         <div id="player-zone" class="hidden">
             <h2 id="now-playing-title" style="color:#ccff00; font-size: 28px; margin-bottom: 20px; line-height: 1.3;"></h2>
@@ -47,7 +53,7 @@
             </div>
             
             <div id="transcript-box" class="hidden"></div>
-            <button id="btn-back" class="back-btn">⬅ BACK TO LIST</button>
+            <button id="btn-back-sub" class="back-btn">⬅ BACK TO LESSONS</button>
         </div>
     </div>
 

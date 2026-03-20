@@ -1,4 +1,4 @@
-const lessonData = {
+const part1 = {
     "Step_1__Airport_Check-In_1._General_Check-in.mp3": {
         dialogue: [
             { speaker: "agent", text: "Hello, where are you flying today?", dict: { "where": "nereye", "flying": "uçmak", "today": "bugün" } },
@@ -293,7 +293,7 @@ const lessonData = {
             { q: "What does Deniz want in the tea?", a_en: "Sugar", a_tr: "Şeker" }
         ]
     },
-    "Step_3__In-Flight_Service_5._Arrival_Time.mp3": {
+    "Step_4__Passport_Control_5._Arrival_Time.mp3": {
         dialogue: [
             { speaker: "deniz", text: "Excuse me, when do we arrive?", dict: { "when": "ne zaman", "arrive": "varmak" } },
             { speaker: "attendant", text: "We will land in one hour.", dict: { "land": "inmek", "hour": "saat" } },
@@ -313,8 +313,8 @@ const lessonData = {
             { q: "What will Deniz do with their things?", a_en: "Pack", a_tr: "Toplamak" },
             { q: "Where must Deniz stay?", a_en: "Seat", a_tr: "Koltuk" }
         ]
-    }
-};"Step_4__Passport_Control_1._Purpose_of_Visit.mp3": {
+    },
+    "Step_4__Passport_Control_1._Purpose_of_Visit.mp3": {
         dialogue: [
             { speaker: "officer", text: "Good afternoon. Passport, please.", dict: { "afternoon": "öğleden sonra", "passport": "pasaport" } },
             { speaker: "deniz", text: "Hello. Here is my passport.", dict: { "here": "işte" } },
@@ -398,25 +398,25 @@ const lessonData = {
             { q: "The officer says '... to our country'.", a_en: "Welcome", a_tr: "Hoşgeldiniz" }
         ]
     },
-    "Step_4__Passport_Control_5._Arrival_Time.mp3": {
+    "Step_5__Customs_Clearance_5._Fingerprints.mp3": {
         dialogue: [
-            { speaker: "deniz", text: "Excuse me, when do we arrive?", dict: { "when": "ne zaman", "arrive": "varmak" } },
-            { speaker: "attendant", text: "We will land in one hour.", dict: { "land": "inmek", "hour": "saat" } },
-            { speaker: "deniz", text: "Are we on time?", dict: { "time": "zaman" } },
-            { speaker: "attendant", text: "Yes, the weather is good. We are on time.", dict: { "weather": "hava", "good": "iyi" } },
-            { speaker: "deniz", text: "That is great. I have a bus to catch.", dict: { "bus": "otobüs", "catch": "yakalamak" } },
-            { speaker: "attendant", text: "We will start going down soon.", dict: { "start": "başlamak", "down": "aşağı", "soon": "yakında" } },
-            { speaker: "deniz", text: "Okay, I will pack my things.", dict: { "pack": "toplamak", "things": "eşyalar" } },
-            { speaker: "attendant", text: "Please stay in your seat.", dict: { "stay": "kalmak", "seat": "koltuk" } }
+            { speaker: "officer", text: "Please look at the camera.", dict: { "look": "bakmak", "camera": "kamera" } },
+            { speaker: "deniz", text: "Like this?", dict: { "like": "gibi" } },
+            { speaker: "officer", text: "Yes. Now, put your right hand on the machine.", dict: { "right": "sağ", "hand": "el", "machine": "makine" } },
+            { speaker: "deniz", text: "Just the right hand?", dict: { "just": "sadece" } },
+            { speaker: "officer", text: "Yes, press your fingers down.", dict: { "press": "basmak", "fingers": "parmaklar", "down": "aşağı" } },
+            { speaker: "deniz", text: "Okay, I did it.", dict: { "did": "yaptım" } },
+            { speaker: "officer", text: "All done. Here is your passport.", dict: { "done": "bitti", "passport": "pasaport" } },
+            { speaker: "deniz", text: "Thank you. Goodbye.", dict: { "goodbye": "hoşçakal" } }
         ],
         questions: [
-            { q: "What action is Deniz asking about?", a_en: "Arrive", a_tr: "Varmak" },
-            { q: "When will the plane land? In one...", a_en: "Hour", a_tr: "Saat" },
-            { q: "The attendant says the plane is on...", a_en: "Time", a_tr: "Zaman" },
-            { q: "Why is the plane on time? Good...", a_en: "Weather", a_tr: "Hava" },
-            { q: "What vehicle does Deniz need to catch?", a_en: "Bus", a_tr: "Otobüs" },
-            { q: "What will Deniz do with their things?", a_en: "Pack", a_tr: "Toplamak" },
-            { q: "Where must Deniz stay?", a_en: "Seat", a_tr: "Koltuk" }
+            { q: "What does the officer want Deniz to look at?", a_en: "Camera", a_tr: "Kamera" },
+            { q: "Which hand must be placed on the machine?", a_en: "Right", a_tr: "Sağ" },
+            { q: "What must Deniz press down?", a_en: "Fingers", a_tr: "Parmaklar" },
+            { q: "What object are the fingers placed on?", a_en: "Machine", a_tr: "Makine" },
+            { q: "The officer says 'All...'", a_en: "Done", a_tr: "Bitti" },
+            { q: "What document does the officer return?", a_en: "Passport", a_tr: "Pasaport" },
+            { q: "Deniz says 'Thank you...'", a_en: "Goodbye", a_tr: "Hoşçakal" }
         ]
     },
     "Step_5__Customs_Clearance_1._Nothing_to_Declare.mp3": {
@@ -503,25 +503,25 @@ const lessonData = {
             { q: "Where does the sign lead?", a_en: "Exit", a_tr: "Çıkış" }
         ]
     },
-    "Step_5__Customs_Clearance_5._Fingerprints.mp3": {
+    "Step_6__Arranging_an_Airport_Transfer_5._Final_Clearance.mp3": {
         dialogue: [
-            { speaker: "officer", text: "Please look at the camera.", dict: { "look": "bakmak", "camera": "kamera" } },
-            { speaker: "deniz", text: "Like this?", dict: { "like": "gibi" } },
-            { speaker: "officer", text: "Yes. Now, put your right hand on the machine.", dict: { "right": "sağ", "hand": "el", "machine": "makine" } },
-            { speaker: "deniz", text: "Just the right hand?", dict: { "just": "sadece" } },
-            { speaker: "officer", text: "Yes, press your fingers down.", dict: { "press": "basmak", "fingers": "parmaklar", "down": "aşağı" } },
-            { speaker: "deniz", text: "Okay, I did it.", dict: { "did": "yaptım" } },
-            { speaker: "officer", text: "All done. Here is your passport.", dict: { "done": "bitti", "passport": "pasaport" } },
-            { speaker: "deniz", text: "Thank you. Goodbye.", dict: { "goodbye": "hoşçakal" } }
+            { speaker: "customs", text: "Can I see your passport one more time?", dict: { "passport": "pasaport", "more": "daha", "time": "kez" } },
+            { speaker: "deniz", text: "Yes, here it is.", dict: { "here": "işte" } },
+            { speaker: "customs", text: "Where did you fly from today?", dict: { "where": "nereden", "fly": "uçmak", "today": "bugün" } },
+            { speaker: "deniz", text: "I flew from London.", dict: { "flew": "uçtum", "london": "londra" } },
+            { speaker: "customs", text: "Alright, you are finished here.", dict: { "finished": "bitti" } },
+            { speaker: "deniz", text: "Where are the taxis?", dict: { "where": "nerede", "taxis": "taksiler" } },
+            { speaker: "customs", text: "Outside the main doors on the right.", dict: { "outside": "dışarıda", "main": "ana", "doors": "kapılar", "right": "sağ" } },
+            { speaker: "deniz", text: "Great, thank you.", dict: { "great": "harika" } }
         ],
         questions: [
-            { q: "What does the officer want Deniz to look at?", a_en: "Camera", a_tr: "Kamera" },
-            { q: "Which hand must be placed on the machine?", a_en: "Right", a_tr: "Sağ" },
-            { q: "What must Deniz press down?", a_en: "Fingers", a_tr: "Parmaklar" },
-            { q: "What object are the fingers placed on?", a_en: "Machine", a_tr: "Makine" },
-            { q: "The officer says 'All...'", a_en: "Done", a_tr: "Bitti" },
-            { q: "What document does the officer return?", a_en: "Passport", a_tr: "Pasaport" },
-            { q: "Deniz says 'Thank you...'", a_en: "Goodbye", a_tr: "Hoşçakal" }
+            { q: "What document is asked for?", a_en: "Passport", a_tr: "Pasaport" },
+            { q: "Where did Deniz fly from?", a_en: "London", a_tr: "Londra" },
+            { q: "The customs officer says 'you are... here'.", a_en: "Finished", a_tr: "Bitti" },
+            { q: "What vehicle is Deniz looking for?", a_en: "Taxis", a_tr: "Taksiler" },
+            { q: "Are the taxis inside or outside?", a_en: "Outside", a_tr: "Dışarıda" },
+            { q: "What kind of doors? The...", a_en: "Main", a_tr: "Ana" },
+            { q: "Are they on the left or right?", a_en: "Right", a_tr: "Sağ" }
         ]
     },
     "Step_6__Arranging_an_Airport_Transfer_1._Finding_a_Taxi.mp3": {
@@ -607,28 +607,7 @@ const lessonData = {
             { q: "Deniz wants to... soon.", a_en: "Rest", a_tr: "Dinlenmek" }
         ]
     },
-    "Step_6__Arranging_an_Airport_Transfer_5._Final_Clearance.mp3": {
-        dialogue: [
-            { speaker: "customs", text: "Can I see your passport one more time?", dict: { "passport": "pasaport", "more": "daha", "time": "kez" } },
-            { speaker: "deniz", text: "Yes, here it is.", dict: { "here": "işte" } },
-            { speaker: "customs", text: "Where did you fly from today?", dict: { "where": "nereden", "fly": "uçmak", "today": "bugün" } },
-            { speaker: "deniz", text: "I flew from London.", dict: { "flew": "uçtum", "london": "londra" } },
-            { speaker: "customs", text: "Alright, you are finished here.", dict: { "finished": "bitti" } },
-            { speaker: "deniz", text: "Where are the taxis?", dict: { "where": "nerede", "taxis": "taksiler" } },
-            { speaker: "customs", text: "Outside the main doors on the right.", dict: { "outside": "dışarıda", "main": "ana", "doors": "kapılar", "right": "sağ" } },
-            { speaker: "deniz", text: "Great, thank you.", dict: { "great": "harika" } }
-        ],
-        questions: [
-            { q: "What document is asked for?", a_en: "Passport", a_tr: "Pasaport" },
-            { q: "Where did Deniz fly from?", a_en: "London", a_tr: "Londra" },
-            { q: "The customs officer says 'you are... here'.", a_en: "Finished", a_tr: "Bitti" },
-            { q: "What vehicle is Deniz looking for?", a_en: "Taxis", a_tr: "Taksiler" },
-            { q: "Are the taxis inside or outside?", a_en: "Outside", a_tr: "Dışarıda" },
-            { q: "What kind of doors? The...", a_en: "Main", a_tr: "Ana" },
-            { q: "Are they on the left or right?", a_en: "Right", a_tr: "Sağ" }
-        ]
-    }
-"Step_7__Hotel_Check-In_1._Greeting.mp3": {
+    "Step_7__Hotel_Check-In_1._Greeting.mp3": {
         dialogue: [
             { speaker: "deniz", text: "Hello, I have a room booked for today.", dict: { "room": "oda", "booked": "rezervasyonlu", "today": "bugün" } },
             { speaker: "receptionist", text: "Welcome! What is your name?", dict: { "welcome": "hoşgeldiniz", "name": "isim" } },
@@ -648,7 +627,8 @@ const lessonData = {
             { q: "What will the receptionist prepare?", a_en: "Key", a_tr: "Anahtar" },
             { q: "What part of the day is the room booked for?", a_en: "Today", a_tr: "Bugün" }
         ]
-    },
+    }
+};const part2 = {
     "Step_7__Hotel_Check-In_2._Breakfast_Question.mp3": {
         dialogue: [
             { speaker: "deniz", text: "What time is breakfast served?", dict: { "time": "saat", "breakfast": "kahvaltı", "served": "servis edilir" } },
@@ -942,7 +922,8 @@ const lessonData = {
             { q: "The waiter says 'No...'", a_en: "Problem", a_tr: "Sorun" },
             { q: "How is Deniz feeling?", a_en: "Thirsty", a_tr: "Susamış" }
         ]
-    }"Step_10__Ordering_Food_1._Ordering_the_Main_Course.mp3": {
+    },
+    "Step_10__Ordering_Food_1._Ordering_the_Main_Course.mp3": {
         dialogue: [
             { speaker: "waiter", text: "Are you ready to order?", dict: { "ready": "hazır", "order": "sipariş vermek" } },
             { speaker: "deniz", text: "Yes, I want the chicken and rice, please.", dict: { "chicken": "tavuk", "rice": "pirinç" } },
@@ -1256,7 +1237,8 @@ const lessonData = {
             { q: "The waiter says 'See you... time'.", a_en: "Next", a_tr: "Gelecek" },
             { q: "What are they paying? The...", a_en: "Bill", a_tr: "Hesap" }
         ]
-    }"Step_13__Asking_for_Directions_1._Finding_the_Museum.mp3": {
+    },
+    "Step_13__Asking_for_Directions_1._Finding_the_Museum.mp3": {
         dialogue: [
             { speaker: "deniz", text: "Excuse me, where is the City Museum?", dict: { "excuse": "affedersiniz", "where": "nerede", "museum": "müze" } },
             { speaker: "local", text: "Go straight and turn left at the park.", dict: { "straight": "düz", "turn": "dönmek", "left": "sol", "park": "park" } },
@@ -1360,7 +1342,8 @@ const lessonData = {
             { q: "The shopkeeper shows where they are on the...", a_en: "Map", a_tr: "Harita" },
             { q: "The shopkeeper wishes Deniz a wonderful...", a_en: "Walk", a_tr: "Yürüyüş" }
         ]
-    },
+    }
+};const part3 = {
     "Step_14__Renting_a_Car_1._Booking_a_Car.mp3": {
         dialogue: [
             { speaker: "deniz", text: "Hello, I want to rent a small car.", dict: { "rent": "kiralamak", "small": "küçük", "car": "araba" } },
@@ -1570,7 +1553,8 @@ const lessonData = {
             { q: "Should it be taken with food?", a_en: "Yes", a_tr: "Evet" },
             { q: "What meal to eat first?", a_en: "Breakfast", a_tr: "Kahvaltı" }
         ]
-    }"Step_16__Pharmacy_1._Buying_Medicine.mp3": {
+    },
+    "Step_16__Pharmacy_1._Buying_Medicine.mp3": {
         dialogue: [
             { speaker: "deniz", text: "Hello. I have this paper from the doctor.", dict: { "paper": "kağıt", "doctor": "doktor" } },
             { speaker: "pharmacist", text: "Let me see. Okay, I have these pills.", dict: { "see": "görmek", "pills": "haplar" } },
@@ -1884,7 +1868,8 @@ const lessonData = {
             { q: "The receptionist says the tea is...", a_en: "Free", a_tr: "Ücretsiz" },
             { q: "Deniz thanks them for making him...", a_en: "Smile", a_tr: "Gülümsemek" }
         ]
-    }"Step_19__Shopping_1._Looking_Around.mp3": {
+    },
+    "Step_19__Shopping_1._Looking_Around.mp3": {
         dialogue: [
             { speaker: "shopkeeper", text: "Welcome to our shop! Can I help you?", dict: { "welcome": "hoşgeldiniz", "shop": "dükkan", "help": "yardım etmek" } },
             { speaker: "deniz", text: "Hello. No thanks, I am just looking.", dict: { "thanks": "teşekkürler", "just": "sadece", "looking": "bakıyorum" } },
@@ -2200,3 +2185,5 @@ const lessonData = {
         ]
     }
 };
+
+const lessonData = { ...part1, ...part2, ...part3 };

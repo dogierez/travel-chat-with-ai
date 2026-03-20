@@ -1,19 +1,33 @@
 const splash = document.getElementById('splash-screen'), instr = document.getElementById('instructions-screen'),
-      app = document.getElementById('main-app'), grid = document.getElementById('stations-grid'),
+      app = document.getElementById('main-app'), categoriesGrid = document.getElementById('categories-grid'),
+      subGrid = document.getElementById('sub-grid'), subItemsContainer = document.getElementById('sub-items-container'),
       playerZone = document.getElementById('player-zone'), audio = document.getElementById('audio-player'),
       transcript = document.getElementById('transcript-box'), popup = document.getElementById('translation-popup'),
       gameZone = document.getElementById('game-zone'), gameBoard = document.getElementById('game-board'),
       feedbackArea = document.getElementById('quiz-feedback-area');
 
 let wordBucket = []; let currentQ = 0; let attempts = 0; let totalScore = 0; let firstCard = null;
+let currentLessonData = null; // Remembers which specific lesson is loaded
 
 // NAVIGATION
 document.getElementById('btn-start').onclick = () => { splash.classList.add('hidden'); instr.classList.remove('hidden'); };
-document.getElementById('btn-enter').onclick = () => { instr.classList.add('hidden'); app.classList.remove('hidden'); generateMenu(); };
-document.getElementById('btn-back').onclick = () => { 
-    playerZone.classList.add('hidden'); grid.classList.remove('hidden'); 
+document.getElementById('btn-enter').onclick = () => { 
+    instr.classList.add('hidden'); app.classList.remove('hidden'); 
+    if (typeof lessonData === 'undefined') {
+        categoriesGrid.innerHTML = "<h2 style='color:#ff4444;'>DATA ERROR: Check data.js syntax!</h2>";
+    } else {
+        generateCategories(); 
+    }
+};
+
+// BACK BUTTONS
+document.getElementById('btn-back-categories').onclick = () => {
+    subGrid.classList.add('hidden'); categoriesGrid.classList.remove('hidden');
+};
+document.getElementById('btn-back-sub').onclick = () => { 
+    playerZone.classList.add('hidden'); subGrid.classList.remove('hidden'); 
     transcript.classList.add('hidden'); gameZone.classList.add('hidden'); 
-    audio.pause(); currentQ = 0; totalScore = 0; attempts = 0;
+    audio.pause(); currentQ = 0; totalScore = 0; attempts = 0; currentLessonData = null;
 };
 
 // AUDIO
@@ -21,35 +35,46 @@ document.getElementById('ctrl-play').onclick = () => audio.play();
 document.getElementById('ctrl-pause').onclick = () => audio.pause();
 document.getElementById('ctrl-stop').onclick = () => { audio.pause(); audio.currentTime = 0; };
 
-// DYNAMIC MENU GENERATOR
-function generateMenu() {
-    grid.innerHTML = "";
-    const filenames = Object.keys(lessonData);
-    filenames.forEach((filename, i) => {
+// GENERATE LEVEL 1 (21 FOLDERS)
+function generateCategories() {
+    categoriesGrid.innerHTML = "";
+    const categories = Object.keys(lessonData);
+    categories.forEach((cat) => {
         const btn = document.createElement('div'); 
         btn.className = 'station-tile';
-        // Clean the filename to make a pretty title
-        let cleanTitle = filename.split('__')[1] ? filename.split('__')[1].replace(".mp3", "").replace(/_/g, " ") : filename;
-        btn.innerHTML = `<b>${i + 1}</b> ${cleanTitle}`;
+        btn.innerHTML = `<b>📁</b> ${cat}`;
+        btn.onclick = () => showSubItems(cat);
+        categoriesGrid.appendChild(btn);
+    });
+}
+
+// GENERATE LEVEL 2 (5 SUB-LESSONS)
+function showSubItems(categoryName) {
+    categoriesGrid.classList.add('hidden'); subGrid.classList.remove('hidden');
+    subItemsContainer.innerHTML = "";
+    
+    const lessons = lessonData[categoryName];
+    lessons.forEach((lesson) => {
+        const btn = document.createElement('div'); 
+        btn.className = 'station-tile';
+        btn.innerHTML = `<b>🎧</b> ${lesson.title}`;
         btn.onclick = () => { 
-            grid.classList.add('hidden'); playerZone.classList.remove('hidden'); 
-            document.getElementById('now-playing-title').innerText = cleanTitle; 
-            audio.src = filename; wordBucket = []; 
+            subGrid.classList.add('hidden'); playerZone.classList.remove('hidden'); 
+            document.getElementById('now-playing-title').innerText = lesson.title; 
+            audio.src = lesson.file; wordBucket = []; currentLessonData = lesson;
         };
-        grid.appendChild(btn);
+        subItemsContainer.appendChild(btn);
     });
 }
 
 // DIALOGUE RENDERER
 document.getElementById('btn-read').onclick = () => {
-    const fn = audio.src.split('/').pop(); const lesson = lessonData[fn];
-    if (lesson) {
+    if (currentLessonData) {
         transcript.classList.remove('hidden'); gameZone.classList.add('hidden'); transcript.innerHTML = "";
         
-        lesson.dialogue.forEach(line => {
+        currentLessonData.dialogue.forEach(line => {
             const lineDiv = document.createElement('div'); lineDiv.className = 'dialogue-line';
             const speakerSpan = document.createElement('span');
-            // Format Speaker Name
             let spkName = line.speaker.charAt(0).toUpperCase() + line.speaker.slice(1);
             speakerSpan.innerText = spkName + ": ";
             speakerSpan.className = line.speaker.toLowerCase() === 'deniz' ? 'speaker-traveler' : 'speaker-official';
@@ -77,12 +102,12 @@ document.getElementById('btn-read').onclick = () => {
 
 // MATCH GAME
 document.getElementById('btn-game').onclick = () => {
-    const fn = audio.src.split('/').pop(); const lesson = lessonData[fn];
+    if (!currentLessonData) return;
     transcript.classList.add('hidden'); gameZone.classList.remove('hidden'); feedbackArea.innerHTML = "";
     gameBoard.innerHTML = ""; firstCard = null; gameBoard.style.display = "grid";
     
     let set = [...wordBucket]; let fullDict = {};
-    lesson.dialogue.forEach(line => { Object.assign(fullDict, line.dict); });
+    currentLessonData.dialogue.forEach(line => { Object.assign(fullDict, line.dict); });
     
     const keys = Object.keys(fullDict);
     for (let k of keys) { if (set.length >= 8) break; if (!set.some(p => p.en === k)) set.push({en: k, tr: fullDict[k]}); }
@@ -110,9 +135,8 @@ document.getElementById('btn-game').onclick = () => {
 
 // BOWLING QUIZ
 document.getElementById('btn-bowling').onclick = () => {
-    const fn = audio.src.split('/').pop(); const lesson = lessonData[fn];
     transcript.classList.add('hidden'); gameZone.classList.remove('hidden'); gameBoard.style.display = "none";
-    runQuiz(lesson);
+    if (currentLessonData) runQuiz(currentLessonData);
 };
 
 function runQuiz(lesson) {

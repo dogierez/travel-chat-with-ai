@@ -1,69 +1,84 @@
 const splash = document.getElementById('splash-screen'), instr = document.getElementById('instructions-screen'),
-      app = document.getElementById('main-app'), categoriesGrid = document.getElementById('categories-grid'),
-      subGrid = document.getElementById('sub-grid'), subItemsContainer = document.getElementById('sub-items-container'),
-      playerZone = document.getElementById('player-zone'), audio = document.getElementById('audio-player'),
-      transcript = document.getElementById('transcript-box'), popup = document.getElementById('translation-popup'),
-      gameZone = document.getElementById('game-zone'), gameBoard = document.getElementById('game-board'),
-      feedbackArea = document.getElementById('quiz-feedback-area');
+      app = document.getElementById('main-app'), lobbyScreen = document.getElementById('lobby-screen'),
+      lobbyContainer = document.getElementById('lobby-container'), playerZone = document.getElementById('player-zone'), 
+      audio = document.getElementById('audio-player'), transcript = document.getElementById('transcript-box'), 
+      popup = document.getElementById('translation-popup'), gameZone = document.getElementById('game-zone'), 
+      gameBoard = document.getElementById('game-board'), feedbackArea = document.getElementById('quiz-feedback-area');
 
 let wordBucket = []; let currentQ = 0; let attempts = 0; let totalScore = 0; let firstCard = null;
-let currentLessonData = null; // Remembers which specific lesson is loaded
+let currentLessonData = null; 
 
 // NAVIGATION
 document.getElementById('btn-start').onclick = () => { splash.classList.add('hidden'); instr.classList.remove('hidden'); };
 document.getElementById('btn-enter').onclick = () => { 
     instr.classList.add('hidden'); app.classList.remove('hidden'); 
     if (typeof lessonData === 'undefined') {
-        categoriesGrid.innerHTML = "<h2 style='color:#ff4444;'>DATA ERROR: Check data.js syntax!</h2>";
+        lobbyContainer.innerHTML = "<h2 style='color:#ff4444;'>DATA ERROR: Check data.js syntax!</h2>";
     } else {
-        generateCategories(); 
+        generateLobby(); 
     }
 };
 
-// BACK BUTTONS
-document.getElementById('btn-back-categories').onclick = () => {
-    subGrid.classList.add('hidden'); categoriesGrid.classList.remove('hidden');
-};
-document.getElementById('btn-back-sub').onclick = () => { 
-    playerZone.classList.add('hidden'); subGrid.classList.remove('hidden'); 
+document.getElementById('btn-back-lobby').onclick = () => { 
+    playerZone.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); 
     transcript.classList.add('hidden'); gameZone.classList.add('hidden'); 
     audio.pause(); currentQ = 0; totalScore = 0; attempts = 0; currentLessonData = null;
 };
 
-// AUDIO
+// AUDIO CONTROLS
 document.getElementById('ctrl-play').onclick = () => audio.play();
 document.getElementById('ctrl-pause').onclick = () => audio.pause();
 document.getElementById('ctrl-stop').onclick = () => { audio.pause(); audio.currentTime = 0; };
 
-// GENERATE LEVEL 1 (21 FOLDERS)
-function generateCategories() {
-    categoriesGrid.innerHTML = "";
-    const categories = Object.keys(lessonData);
-    categories.forEach((cat) => {
-        const btn = document.createElement('div'); 
-        btn.className = 'station-tile';
-        btn.innerHTML = `<b>📁</b> ${cat}`;
-        btn.onclick = () => showSubItems(cat);
-        categoriesGrid.appendChild(btn);
-    });
-}
-
-// GENERATE LEVEL 2 (5 SUB-LESSONS)
-function showSubItems(categoryName) {
-    categoriesGrid.classList.add('hidden'); subGrid.classList.remove('hidden');
-    subItemsContainer.innerHTML = "";
+// GENERATE ACCORDION LOBBY
+function generateLobby() {
+    lobbyContainer.innerHTML = "";
+    const groups = {};
     
-    const lessons = lessonData[categoryName];
-    lessons.forEach((lesson) => {
-        const btn = document.createElement('div'); 
-        btn.className = 'station-tile';
-        btn.innerHTML = `<b>🎧</b> ${lesson.title}`;
-        btn.onclick = () => { 
-            subGrid.classList.add('hidden'); playerZone.classList.remove('hidden'); 
-            document.getElementById('now-playing-title').innerText = lesson.title; 
-            audio.src = lesson.file; wordBucket = []; currentLessonData = lesson;
+    // Group the files automatically by parsing the filename
+    Object.keys(lessonData).forEach(fn => {
+        let catMatch = fn.match(/^(.*?)_\d+\._/);
+        let catName = catMatch ? catMatch[1].replace(/__/g, ": ").replace(/_/g, " ") : "Category";
+        let subMatch = fn.match(/_(\d+\._.*)\.mp3$/);
+        let subName = subMatch ? subMatch[1].replace(/_/g, " ") : fn;
+        
+        if (!groups[catName]) groups[catName] = [];
+        groups[catName].push({ file: fn, title: subName });
+    });
+
+    // Build the UI
+    Object.keys(groups).forEach(cat => {
+        const catBtn = document.createElement('button');
+        catBtn.className = 'lobby-cat-btn';
+        catBtn.innerHTML = `📁 ${cat}`;
+        
+        const subContainer = document.createElement('div');
+        subContainer.className = 'lobby-sub-container hidden';
+        
+        catBtn.onclick = () => {
+            document.querySelectorAll('.lobby-sub-container').forEach(c => { if(c !== subContainer) c.classList.add('hidden'); });
+            document.querySelectorAll('.lobby-cat-btn').forEach(b => { if(b !== catBtn) b.classList.remove('active-cat'); });
+            subContainer.classList.toggle('hidden');
+            catBtn.classList.toggle('active-cat');
         };
-        subItemsContainer.appendChild(btn);
+        
+        groups[cat].forEach(sub => {
+            const subBtn = document.createElement('button');
+            subBtn.className = 'lobby-sub-btn';
+            subBtn.innerHTML = `🎧 ${sub.title}`;
+            subBtn.onclick = () => {
+                lobbyScreen.classList.add('hidden');
+                playerZone.classList.remove('hidden');
+                document.getElementById('now-playing-title').innerText = sub.title;
+                audio.src = sub.file;
+                wordBucket = [];
+                currentLessonData = lessonData[sub.file];
+            };
+            subContainer.appendChild(subBtn);
+        });
+        
+        lobbyContainer.appendChild(catBtn);
+        lobbyContainer.appendChild(subContainer);
     });
 }
 

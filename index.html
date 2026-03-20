@@ -2,469 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Scenarios</title>
-    <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --orange: #fb923c; --lblue: #7dd3fc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; line-height: 1.6; }
-        .hidden { display: none !important; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 2.5rem; }
-        
-        /* Lobby */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .step-card { background: var(--card); border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .step-card.locked { opacity: 0.5; cursor: not-allowed; background: #e5e7eb; border-style: dashed; }
-        .step-card:not(.locked):hover { border-color: var(--primary); transform: translateY(-3px); }
-        .step-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
-        .step-title { font-weight: bold; font-size: 0.95rem; display: block; min-height: 2.4em; }
-        .progress-tag { font-size: 0.8rem; color: var(--primary); font-weight: bold; margin-top: 10px; background: #eff6ff; padding: 4px; border-radius: 5px; }
-
-        /* Scenario Layout */
-        .back-btn { background: #64748b; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .dialogue-item { background: white; padding: 18px; border-radius: 10px; border-left: 6px solid var(--primary); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-        /* Controls */
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .mode-btn { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
-        .btn-listen { background: #3b82f6; } .btn-read { background: #8b5cf6; } .btn-match { background: #f59e0b; } .btn-speak { background: #10b981; }
-        #content-area { background: white; padding: 30px; border-radius: 15px; min-height: 500px; border: 1px solid #e2e8f0; position: relative; }
-
-        /* Reading Interface */
-        .dialogue-line { margin-bottom: 15px; font-size: 1.15rem; }
-        .speaker-label { font-weight: bold; color: #475569; margin-right: 8px; }
-        .speaker-Deniz { color: var(--primary) !important; }
-        .vocab { border-bottom: 2px dashed #f59e0b; cursor: pointer; color: #c2410c; font-weight: bold; position: relative; padding: 0 2px; }
-        .tooltip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; z-index: 100; white-space: nowrap; }
-        .vocab:hover .tooltip { display: block; }
-
-        /* Matching Game Interface */
-        .match-grid { display: flex; justify-content: space-around; gap: 20px; }
-        .match-col { display: flex; flex-direction: column; gap: 10px; width: 45%; }
-        .match-btn { padding: 15px; border-radius: 10px; border: 2px solid transparent; font-weight: bold; cursor: pointer; font-size: 1.1rem; color: white; }
-        .match-en { background: var(--orange); border-color: #f97316; } 
-        .match-tr { background: var(--lblue); color: #0369a1; border-color: #38bdf8; } 
-        .selected { outline: 5px solid #2563eb; transform: scale(0.96); }
-        .matched { visibility: hidden; pointer-events: none; }
-
-        /* Speak Pulse */
-        .speech-box { text-align: center; }
-        .mic-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 85px; height: 85px; font-size: 2rem; cursor: pointer; }
-        .mic-btn.listening { animation: pulse 1s infinite; background: #dc2626; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Travel Conversations</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="container">
-    <div id="lobby-view">
-        <h1>Travel Scenarios</h1>
-        <div class="grid" id="step-grid"></div>
-    </div>
-
-    <div id="step-view" class="hidden">
-        <button class="back-btn" onclick="showLobby()">← Back to Lobby</button>
-        <h2 id="step-title" style="color:var(--primary)"></h2>
-        <div id="dialogue-list"></div>
-    </div>
-
-    <div id="game-view" class="hidden">
-        <button class="back-btn" onclick="showStepView()">← Back to Scenarios</button>
-        <h2 id="current-dialogue-title"></h2>
-        <div class="controls">
-            <button class="mode-btn btn-listen" onclick="modeListen()">🎧 Listen Only</button>
-            <button class="mode-btn btn-read" onclick="modeRead()">📖 Read & Listen</button>
-            <button class="mode-btn btn-match" onclick="modeMatch()">🧩 Matching Game</button>
-            <button class="mode-btn btn-speak" onclick="modeSpeak()">🎤 Answer Questions</button>
+    <div id="splash-screen" class="screen">
+        <div class="content-wrapper">
+            <div class="image-box"><img src="logo.png" alt="App Logo" id="main-logo"></div>
+            <button id="btn-start" class="action-btn-large">START LESSONS</button>
         </div>
-        <div id="content-area"></div>
     </div>
-</div>
 
-<audio id="master-player"></audio>
+    <div id="instructions-screen" class="screen hidden">
+        <div class="content-wrapper">
+            <div class="image-box"><img src="instructions.png" alt="Instructions" id="instructions-img"></div>
+            <button id="btn-enter" class="action-btn-large">ENTER APP</button>
+        </div>
+    </div>
 
-<script>
-    let progress = JSON.parse(localStorage.getItem('denizTravelProgress')) || {};
-    let activeStepKey = '', activeIdx = null;
-    let recognition, currentQIdx = 0, attempts = 0;
+    <div id="main-app" class="screen hidden">
+        <h1 id="app-title" style="color: #ccff00; font-size: 36px; margin-bottom: 20px;">Travel Chat</h1>
+        <div id="stations-grid" class="grid-container"></div>
+        
+        <div id="player-zone" class="hidden">
+            <h2 id="now-playing-title" style="color:#ccff00; font-size: 28px; margin-bottom: 20px; line-height: 1.3;"></h2>
+            
+            <div class="audio-controls">
+                <button id="ctrl-play" class="ctrl-btn">▶ PLAY</button>
+                <button id="ctrl-pause" class="ctrl-btn">⏸ PAUSE</button>
+                <button id="ctrl-stop" class="ctrl-btn">⏹ STOP</button>
+            </div>
+            
+            <div class="learning-buttons">
+                <button id="btn-blind" class="mode-btn neon-blue">🎧 LISTEN BLIND</button>
+                <button id="btn-read" class="mode-btn neon-green">📖 LISTEN + READ</button>
+                <button id="btn-game" class="mode-btn neon-pink">🎮 MATCH GAME</button>
+                <button id="btn-bowling" class="mode-btn neon-yellow">🎳 BOWLING QUIZ</button>
+            </div>
+            
+            <div id="game-zone" class="hidden">
+                <div id="game-board"></div>
+                <div id="quiz-feedback-area"></div>
+            </div>
+            
+            <div id="transcript-box" class="hidden"></div>
+            <button id="btn-back" class="back-btn">⬅ BACK TO LIST</button>
+        </div>
+    </div>
 
-    // DIRECT ROOT PATH
-    const AUD_PATH = "./";
+    <div id="translation-popup" class="hidden"></div>
+    <audio id="audio-player" controlsList="nodownload"></audio>
 
-    const stepInfo = [
-        { t: "Airport Check-In", i: "🛫" }, { t: "Boarding the Plane", i: "🎫" }, { t: "In-Flight Service", i: "☕" },
-        { t: "Passport Control", i: "🛂" }, { t: "Customs Clearance", i: "📦" }, { t: "Airport Transfer", i: "🚕" },
-        { t: "Hotel Check-In", i: "🏨" }, { t: "Hotel Complaints", i: "🛠️" }, { t: "Restaurant Entry", i: "🍽️" },
-        { t: "Ordering Food", i: "📜" }, { t: "Food Problems", i: "🥗" }, { t: "The Bill", i: "💳" },
-        { t: "Directions", i: "🗺️" }, { t: "Car Rental", i: "🚗" }, { t: "Doctor", i: "🏥" },
-        { t: "Pharmacy", i: "💊" }, { t: "Lost Items", i: "🔍" }, { t: "Back at Hotel", i: "🔑" },
-        { t: "Shopping", i: "🛍️" }, { t: "Return Ride", i: "🚐" }, { t: "Flight Home", i: "🏠" }
-    ];
-
-    const appData = {
-        step1: {
-            dialogues: [
-                {
-                    title: "1.1 General Check-in",
-                    audio: "Step_1__Airport_Check-In_1._General_Check-in.mp3",
-                    lines: [
-                        { s: "Agent", t: "Hello, where are you <span class='vocab' onclick='modeMatch()'>flying<span class='tooltip'>uçmak (v)</span></span> today?" },
-                        { s: "Deniz", t: "Hello, I am flying to London." },
-                        { s: "Agent", t: "Can I <span class='vocab' onclick='modeMatch()'>see<span class='tooltip'>bakmak (v)</span></span> your <span class='vocab' onclick='modeMatch()'>passport<span class='tooltip'>pasaport (n)</span></span> and ticket, please?" },
-                        { s: "Deniz", t: "Yes, here is my passport." },
-                        { s: "Agent", t: "Thank you. Are you <span class='vocab' onclick='modeMatch()'>traveling<span class='tooltip'>seyahat etmek (v)</span></span> <span class='vocab' onclick='modeMatch()'>alone<span class='tooltip'>yalnız (adj)</span></span>?" },
-                        { s: "Deniz", t: "Yes, it is <span class='vocab' onclick='modeMatch()'>just<span class='tooltip'>sadece (adv)</span></span> me." },
-                        { s: "Agent", t: "Okay, here is your <span class='vocab' onclick='modeMatch()'>boarding pass<span class='tooltip'>biniş kartı (n)</span></span>." },
-                        { s: "Deniz", t: "Thank you <span class='vocab' onclick='modeMatch()'>very much<span class='tooltip'>çok fazla (adv)</span></span>." }
-                    ],
-                    pairs: [{e:"flying", t:"uçmak (v)"},{e:"see", t:"bakmak (v)"},{e:"passport", t:"pasaport (n)"},{e:"traveling", t:"seyahat etmek (v)"},{e:"alone", t:"yalnız (adj)"},{e:"just", t:"sadece (adv)"},{e:"boarding pass", t:"biniş kartı (n)"},{e:"very much", t:"çok fazla (adv)"},{e:"today", t:"bugün (adv)"},{e:"hello", t:"merhaba (int)"}],
-                    questions: [{q:"Where are you flying?", a:"hello i am flying to london"},{q:"Can I see your passport?", a:"yes here is my passport"},{q:"Are you traveling alone?", a:"yes it is just me"},{q:"Here is your pass.", a:"thank you very much"}]
-                },
-                {
-                    title: "1.2 Checking Baggage",
-                    audio: "Step_1__Airport_Check-In_2._Checking_Baggage.mp3",
-                    lines: [
-                        { s: "Agent", t: "Do you have <span class='vocab' onclick='modeMatch()'>bags<span class='tooltip'>çantalar (n)</span></span> to <span class='vocab' onclick='modeMatch()'>check in<span class='tooltip'>kayıt yaptırmak (v)</span></span>?" },
-                        { s: "Deniz", t: "Yes, I have one <span class='vocab' onclick='modeMatch()'>big<span class='tooltip'>büyük (adj)</span></span> suitcase." },
-                        { s: "Agent", t: "Please <span class='vocab' onclick='modeMatch()'>put<span class='tooltip'>koymak (v)</span></span> it on the <span class='vocab' onclick='modeMatch()'>scale<span class='tooltip'>tartı (n)</span></span>." },
-                        { s: "Deniz", t: "Okay, here it is. Is it <span class='vocab' onclick='modeMatch()'>heavy<span class='tooltip'>ağır (adj)</span></span>?" },
-                        { s: "Agent", t: "It is 20 kilos. It is <span class='vocab' onclick='modeMatch()'>fine<span class='tooltip'>uygun/iyi (adj)</span></span>." },
-                        { s: "Deniz", t: "Do I <span class='vocab' onclick='modeMatch()'>keep<span class='tooltip'>tutmak (v)</span></span> this <span class='vocab' onclick='modeMatch()'>small<span class='tooltip'>küçük (adj)</span></span> bag with me?" },
-                        { s: "Agent", t: "Yes, you can <span class='vocab' onclick='modeMatch()'>take<span class='tooltip'>almak (v)</span></span> that on the plane." },
-                        { s: "Deniz", t: "<span class='vocab' onclick='modeMatch()'>Great<span class='tooltip'>harika (adj)</span></span>, thank you." }
-                    ],
-                    pairs: [{e:"check in", t:"kayıt (v)"},{e:"big", t:"büyük (adj)"},{e:"put", t:"koymak (v)"},{e:"scale", t:"tartı (n)"},{e:"heavy", t:"ağır (adj)"},{e:"fine", t:"uygun (adj)"},{e:"keep", t:"tutmak (v)"},{e:"small", t:"küçük (adj)"},{e:"take", t:"almak (v)"},{e:"great", t:"harika (adj)"}],
-                    questions: [{q:"Do you have bags?", a:"yes i have one big suitcase"},{q:"Is it heavy?", a:"it is twenty kilos it is fine"},{q:"Do I keep this bag?", a:"yes you can take that on the plane"},{q:"Great, thank you.", a:"you are welcome"}]
-                },
-                {
-                    title: "1.3 Overweight Luggage",
-                    audio: "Step_1__Airport_Check-In_3._Overweight_Luggage.mp3",
-                    lines: [
-                        { s: "Agent", t: "I am <span class='vocab' onclick='modeMatch()'>sorry<span class='tooltip'>üzgün (adj)</span></span>, your bag is <span class='vocab' onclick='modeMatch()'>too heavy<span class='tooltip'>çok ağır (adj)</span></span>." },
-                        { s: "Deniz", t: "Oh no. How heavy is it?" },
-                        { s: "Agent", t: "It is 25 kilos. The <span class='vocab' onclick='modeMatch()'>limit<span class='tooltip'>sınır (n)</span></span> is 23 kilos." },
-                        { s: "Deniz", t: "Can I <span class='vocab' onclick='modeMatch()'>pay<span class='tooltip'>ödemek (v)</span></span> for the <span class='vocab' onclick='modeMatch()'>extra<span class='tooltip'>ek/fazla (adj)</span></span> weight?" },
-                        { s: "Agent", t: "Yes, it <span class='vocab' onclick='modeMatch()'>costs<span class='tooltip'>mal olmak (v)</span></span> 30 euros." },
-                        { s: "Deniz", t: "Okay, I will <span class='vocab' onclick='modeMatch()'>pay<span class='tooltip'>ödemek (v)</span></span> with my <span class='vocab' onclick='modeMatch()'>credit card<span class='tooltip'>kredi kartı (n)</span></span>." },
-                        { s: "Agent", t: "Thank you. Here is your <span class='vocab' onclick='modeMatch()'>receipt<span class='tooltip'>fiş/makbuz (n)</span></span>." },
-                        { s: "Deniz", t: "Thanks for your help." }
-                    ],
-                    pairs: [{e:"sorry", t:"üzgün (adj)"},{e:"too heavy", t:"çok ağır (adj)"},{e:"limit", t:"sınır (n)"},{e:"pay", t:"ödemek (v)"},{e:"extra", t:"fazla (adj)"},{e:"costs", t:"mal olmak (v)"},{e:"receipt", t:"fiş (n)"},{e:"credit card", t:"kredi kartı (n)"},{e:"weight", t:"ağırlık (n)"},{e:"help", t:"yardım (n)"}],
-                    questions: [{q:"How heavy is it?", a:"it is twenty five kilos"},{q:"Can I pay extra?", a:"yes it costs thirty euros"},{q:"Pay with credit card.", a:"thank you here is your receipt"},{q:"Thanks for help.", a:"you are welcome"}]
-                },
-                {
-                    title: "1.4 Seat Preference",
-                    audio: "Step_1__Airport_Check-In_4._Seat_Preference.mp3",
-                    lines: [
-                        { s: "Agent", t: "Would you like a <span class='vocab' onclick='modeMatch()'>window<span class='tooltip'>pencere (n)</span></span> or <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span> seat?" },
-                        { s: "Deniz", t: "I would like a window seat, please." },
-                        { s: "Agent", t: "Let me <span class='vocab' onclick='modeMatch()'>check<span class='tooltip'>kontrol etmek (v)</span></span>. Yes, I have one." },
-                        { s: "Deniz", t: "Is it <span class='vocab' onclick='modeMatch()'>near<span class='tooltip'>yakın (adj)</span></span> the <span class='vocab' onclick='modeMatch()'>front<span class='tooltip'>ön (adj/n)</span></span> of the plane?" },
-                        { s: "Agent", t: "Yes, it is in <span class='vocab' onclick='modeMatch()'>row<span class='tooltip'>sıra (n)</span></span> 10." },
-                        { s: "Deniz", t: "That is <span class='vocab' onclick='modeMatch()'>perfect<span class='tooltip'>mükemmel (adj)</span></span>." },
-                        { s: "Agent", t: "Here is your ticket with your seat number." },
-                        { s: "Deniz", t: "Thanks a lot." }
-                    ],
-                    pairs: [{e:"window", t:"pencere (n)"},{e:"aisle", t:"koridor (n)"},{e:"check", t:"kontrol (v)"},{e:"near", t:"yakın (adj)"},{e:"front", t:"ön (adj)"},{e:"row", t:"sıra (n)"},{e:"perfect", t:"mükemmel (adj)"},{e:"ticket", t:"bilet (n)"},{e:"a lot", t:"çok (adv)"},{e:"plane", t:"uçak (n)"}],
-                    questions: [{q:"Window or aisle?", a:"i would like a window seat please"},{q:"Near the front?", a:"yes it is in row ten"},{q:"That is perfect.", a:"here is your ticket"},{q:"Thanks a lot.", a:"have a good flight"}]
-                },
-                {
-                    title: "1.5 Boarding Time Inquiry",
-                    audio: "Step_1__Airport_Check-In_5._Boarding_Time_Inquiry.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, what time is <span class='vocab' onclick='modeMatch()'>boarding<span class='tooltip'>uçağa biniş (n)</span></span>?" },
-                        { s: "Agent", t: "Boarding <span class='vocab' onclick='modeMatch()'>starts<span class='tooltip'>başlamak (v)</span></span> at 10:30 AM." },
-                        { s: "Deniz", t: "Which <span class='vocab' onclick='modeMatch()'>gate<span class='tooltip'>kapı (n)</span></span> do I <span class='vocab' onclick='modeMatch()'>need<span class='tooltip'>ihtiyaç (v)</span></span> to go to?" },
-                        { s: "Agent", t: "You need to go to Gate 15." },
-                        { s: "Deniz", t: "Is the gate <span class='vocab' onclick='modeMatch()'>far<span class='tooltip'>uzak (adj)</span></span> from here?" },
-                        { s: "Agent", t: "It is a ten-minute <span class='vocab' onclick='modeMatch()'>walk<span class='tooltip'>yürüyüş (n)</span></span>." },
-                        { s: "Deniz", t: "Okay, I will <span class='vocab' onclick='modeMatch()'>go<span class='tooltip'>gitmek (v)</span></span> there now." },
-                        { s: "Agent", t: "Have a <span class='vocab' onclick='modeMatch()'>good<span class='tooltip'>iyi (adj)</span></span> flight!" }
-                    ],
-                    pairs: [{e:"boarding", t:"biniş (n)"},{e:"starts", t:"başlar (v)"},{e:"gate", t:"kapı (n)"},{e:"need", t:"ihtiyaç (v)"},{e:"far", t:"uzak (adj)"},{e:"walk", t:"yürüyüş (n)"},{e:"go", t:"gitmek (v)"},{e:"good", t:"iyi (adj)"},{e:"flight", t:"uçuş (n)"},{e:"now", t:"şimdi (adv)"}],
-                    questions: [{q:"What time is boarding?", a:"boarding starts at ten thirty"},{q:"Which gate?", a:"you need to go to gate fifteen"},{q:"Is it far?", a:"it is a ten minute walk"},{q:"Go there now.", a:"have a good flight"}]
-                }
-            ]
-        },
-        step2: {
-            dialogues: [
-                {
-                    title: "2.1 Finding the Seat",
-                    audio: "Step_2__Boarding_the_Plane_1._Finding_the_Seat.mp3",
-                    lines: [
-                        { s: "Flight Attendant", t: "Welcome! Can I <span class='vocab' onclick='modeMatch()'>see<span class='tooltip'>görmek (v)</span></span> your ticket?" },
-                        { s: "Deniz", t: "Yes, my <span class='vocab' onclick='modeMatch()'>seat<span class='tooltip'>koltuk (n)</span></span> is 10A." },
-                        { s: "Flight Attendant", t: "<span class='vocab' onclick='modeMatch()'>Walk<span class='tooltip'>yürümek (v)</span></span> down this <span class='vocab' onclick='modeMatch()'>aisle<span class='tooltip'>koridor (n)</span></span>. It is on the <span class='vocab' onclick='modeMatch()'>left<span class='tooltip'>sol (adj)</span></span>." },
-                        { s: "Deniz", t: "Is it <span class='vocab' onclick='modeMatch()'>near<span class='tooltip'>yakın (adj)</span></span> the wing?" },
-                        { s: "Flight Attendant", t: "Yes, it is <span class='vocab' onclick='modeMatch()'>right<span class='tooltip'>doğru (adj)</span></span> next to the <span class='vocab' onclick='modeMatch()'>window<span class='tooltip'>pencere (n)</span></span>." },
-                        { s: "Deniz", t: "<span class='vocab' onclick='modeMatch()'>Perfect<span class='tooltip'>mükemmel (adj)</span></span>, I see it now." },
-                        { s: "Flight Attendant", t: "Let me <span class='vocab' onclick='modeMatch()'>know<span class='tooltip'>bilmek (v)</span></span> if you need <span class='vocab' onclick='modeMatch()'>help<span class='tooltip'>yardım (n)</span></span>." },
-                        { s: "Deniz", t: "Thank you, I am <span class='vocab' onclick='modeMatch()'>fine<span class='tooltip'>iyi (adj)</span></span>." }
-                    ],
-                    pairs: [{e:"see", t:"bakmak (v)"},{e:"walk", t:"yürümek (v)"},{e:"know", t:"bilmek (v)"},{e:"perfect", t:"mükemmel (adj)"},{e:"right", t:"doğru (adj)"},{e:"fine", t:"iyi (adj)"},{e:"near", t:"yakın (adj)"},{e:"aisle", t:"koridor (n)"},{e:"seat", t:"koltuk (n)"},{e:"window", t:"pencere (n)"}],
-                    questions: [{q:"Can I see your ticket?", a:"yes my seat is ten a"},{q:"Is it near the wing?", a:"yes it is right next to the window"},{q:"Need help?", a:"thank you i am fine"},{q:"See it now.", a:"perfect thank you"}]
-                },
-                {
-                    title: "2.2 Overhead Bin Space",
-                    audio: "Step_2__Boarding_the_Plane_2._Overhead_Bin_Space.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, this <span class='vocab' onclick='modeMatch()'>bin<span class='tooltip'>bölme (n)</span></span> is <span class='vocab' onclick='modeMatch()'>full<span class='tooltip'>dolu (adj)</span></span>." },
-                        { s: "Flight Attendant", t: "Let me <span class='vocab' onclick='modeMatch()'>help<span class='tooltip'>yardım (v)</span></span> you <span class='vocab' onclick='modeMatch()'>find<span class='tooltip'>bulmak (v)</span></span> space." },
-                        { s: "Deniz", t: "My bag is a little <span class='vocab' onclick='modeMatch()'>heavy<span class='tooltip'>ağır (adj)</span></span>." },
-                        { s: "Flight Attendant", t: "I can <span class='vocab' onclick='modeMatch()'>put<span class='tooltip'>koymak (v)</span></span> it in the bin behind you." },
-                        { s: "Deniz", t: "Thank you. That is very <span class='vocab' onclick='modeMatch()'>helpful<span class='tooltip'>yardımsever (adj)</span></span>." },
-                        { s: "Flight Attendant", t: "You are <span class='vocab' onclick='modeMatch()'>welcome<span class='tooltip'>rica ederim (int)</span></span>. Please sit down." },
-                        { s: "Deniz", t: "I will <span class='vocab' onclick='modeMatch()'>sit<span class='tooltip'>oturmak (v)</span></span> down now." },
-                        { s: "Flight Attendant", t: "<span class='vocab' onclick='modeMatch()'>Fasten<span class='tooltip'>bağlamak (v)</span></span> your seatbelt, please." }
-                    ],
-                    pairs: [{e:"bin", t:"bölme (n)"},{e:"full", t:"dolu (adj)"},{e:"help", t:"yardım (v)"},{e:"find", t:"bulmak (v)"},{e:"heavy", t:"ağır (adj)"},{e:"put", t:"koymak (v)"},{e:"helpful", t:"faydalı (adj)"},{e:"welcome", t:"rica ederim (int)"},{e:"sit", t:"oturmak (v)"},{e:"fasten", t:"bağlamak (v)"}],
-                    questions: [{q:"This bin is full.", a:"let me help you find space"},{q:"My bag is heavy.", a:"i can put it in the bin"},{q:"That is helpful.", a:"you are welcome please sit down"},{q:"Sit down.", a:"fasten your seatbelt please"}]
-                },
-                {
-                    title: "2.3 Wrong Seat",
-                    audio: "Step_2__Boarding_the_Plane_3._Wrong_Seat.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, I <span class='vocab' onclick='modeMatch()'>think<span class='tooltip'>düşünmek (v)</span></span> this is my seat." },
-                        { s: "Passenger", t: "Oh, really? Are you <span class='vocab' onclick='modeMatch()'>sure<span class='tooltip'>emin (adj)</span></span>?" },
-                        { s: "Deniz", t: "Yes, my ticket <span class='vocab' onclick='modeMatch()'>says<span class='tooltip'>söylemek (v)</span></span> 10A." },
-                        { s: "Passenger", t: "Sorry, I am in 10B. I <span class='vocab' onclick='modeMatch()'>sat<span class='tooltip'>oturmak (v2)</span></span> in the <span class='vocab' onclick='modeMatch()'>wrong<span class='tooltip'>yanlış (adj)</span></span> seat." },
-                        { s: "Deniz", t: "No problem. It <span class='vocab' onclick='modeMatch()'>happens<span class='tooltip'>olmak (v)</span></span>." },
-                        { s: "Passenger", t: "I will <span class='vocab' onclick='modeMatch()'>move<span class='tooltip'>hareket (v)</span></span> right now." },
-                        { s: "Deniz", t: "<span class='vocab' onclick='modeMatch()'>Take<span class='tooltip'>almak (v)</span></span> your time, no <span class='vocab' onclick='modeMatch()'>rush<span class='tooltip'>acele (n)</span></span>." },
-                        { s: "Passenger", t: "Thank you for <span class='vocab' onclick='modeMatch()'>understanding<span class='tooltip'>anlayışlı (adj)</span></span>." }
-                    ],
-                    pairs: [{e:"think", t:"düşünmek (v)"},{e:"sure", t:"emin (adj)"},{e:"says", t:"diyor (v)"},{e:"sat", t:"oturdu (v)"},{e:"wrong", t:"yanlış (adj)"},{e:"happens", t:"olur (v)"},{e:"move", t:"çekilmek (v)"},{e:"take", t:"almak (v)"},{e:"rush", t:"acele (n)"},{e:"understanding", t:"anlayışlı (adj)"}],
-                    questions: [{q:"Are you sure?", a:"yes my ticket says ten a"},{q:"Sat in the wrong seat.", a:"no problem it happens"},{q:"I will move now.", a:"take your time no rush"},{q:"No rush.", a:"thank you for understanding"}]
-                },
-                {
-                    title: "2.4 Asking for a Blanket",
-                    audio: "Step_2__Boarding_the_Plane_4._Asking_for_a_Blanket.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, it is very <span class='vocab' onclick='modeMatch()'>cold<span class='tooltip'>soğuk (adj)</span></span> here." },
-                        { s: "Flight Attendant", t: "I can <span class='vocab' onclick='modeMatch()'>turn down<span class='tooltip'>kısmak (v)</span></span> the air." },
-                        { s: "Deniz", t: "Can I also <span class='vocab' onclick='modeMatch()'>get<span class='tooltip'>almak (v)</span></span> a <span class='vocab' onclick='modeMatch()'>blanket<span class='tooltip'>battaniye (n)</span></span>, please?" },
-                        { s: "Flight Attendant", t: "Yes, of course. I will <span class='vocab' onclick='modeMatch()'>bring<span class='tooltip'>getirmek (v)</span></span> one." },
-                        { s: "Deniz", t: "Thank you, I <span class='vocab' onclick='modeMatch()'>want<span class='tooltip'>istemek (v)</span></span> to <span class='vocab' onclick='modeMatch()'>sleep<span class='tooltip'>uyumak (v)</span></span>." },
-                        { s: "Flight Attendant", t: "Here is your blanket. Is it <span class='vocab' onclick='modeMatch()'>warm<span class='tooltip'>sıcak (adj)</span></span>?" },
-                        { s: "Deniz", t: "Thanks, this is much <span class='vocab' onclick='modeMatch()'>better<span class='tooltip'>daha iyi (adj)</span></span>." },
-                        { s: "Flight Attendant", t: "Have a <span class='vocab' onclick='modeMatch()'>nice<span class='tooltip'>güzel (adj)</span></span> rest." }
-                    ],
-                    pairs: [{e:"cold", t:"soğuk (adj)"},{e:"turn down", t:"kısmak (v)"},{e:"get", t:"almak (v)"},{e:"blanket", t:"battaniye (n)"},{e:"bring", t:"getirmek (v)"},{e:"want", t:"istemek (v)"},{e:"sleep", t:"uyumak (v)"},{e:"warm", t:"sıcak (adj)"},{e:"better", t:"daha iyi (adj)"},{e:"nice", t:"güzel (adj)"}],
-                    questions: [{q:"It is very cold.", a:"i can turn down the air"},{q:"Can I get a blanket?", a:"yes i will bring one"},{q:"I want to sleep.", a:"here is your blanket"},{q:"Is it warm?", a:"thanks this is much better"}]
-                },
-                {
-                    title: "2.5 Safety Check",
-                    audio: "Step_2__Boarding_the_Plane_5._Safety_Check.mp3",
-                    lines: [
-                        { s: "Flight Attendant", t: "Please <span class='vocab' onclick='modeMatch()'>fasten<span class='tooltip'>bağlamak (v)</span></span> your seatbelt." },
-                        { s: "Deniz", t: "Okay, I <span class='vocab' onclick='modeMatch()'>did<span class='tooltip'>yapmak (v2)</span></span> it." },
-                        { s: "Flight Attendant", t: "And please <span class='vocab' onclick='modeMatch()'>put<span class='tooltip'>koymak (v)</span></span> your table up." },
-                        { s: "Deniz", t: "Sorry, I <span class='vocab' onclick='modeMatch()'>forgot<span class='tooltip'>unutmak (v2)</span></span>. Is this <span class='vocab' onclick='modeMatch()'>right<span class='tooltip'>doğru (adj)</span></span>?" },
-                        { s: "Flight Attendant", t: "Yes, that is <span class='vocab' onclick='modeMatch()'>perfect<span class='tooltip'>mükemmel (adj)</span></span>. Thank you." },
-                        { s: "Deniz", t: "Are we <span class='vocab' onclick='modeMatch()'>leaving<span class='tooltip'>ayrılmak (v)</span></span> <span class='vocab' onclick='modeMatch()'>soon<span class='tooltip'>yakında (adv)</span></span>?" },
-                        { s: "Flight Attendant", t: "Yes, we will fly in five minutes." },
-                        { s: "Deniz", t: "Great, I am <span class='vocab' onclick='modeMatch()'>ready<span class='tooltip'>hazır (adj)</span></span>." }
-                    ],
-                    pairs: [{e:"fasten", t:"bağlamak (v)"},{e:"did", t:"yapmak (v)"},{e:"put", t:"koymak (v)"},{e:"forgot", t:"unutmak (v)"},{e:"right", t:"doğru (adj)"},{e:"perfect", t:"mükemmel (adj)"},{e:"leaving", t:"ayrılmak (v)"},{e:"soon", t:"yakında (adv)"},{e:"ready", t:"hazır (adj)"},{e:"fly", t:"uçmak (v)"}],
-                    questions: [{q:"Fasten seatbelt.", a:"okay i did it"},{q:"Put table up.", a:"sorry i forgot is this right"},{q:"Are we leaving soon?", a:"yes we will fly in five minutes"},{q:"Great.", a:"i am ready"}]
-                }
-            ]
-        },
-        step3: {
-            dialogues: [
-                {
-                    title: "3.1 Ordering Food",
-                    audio: "Step_3__In-Flight_Service_1._Ordering_Food.mp3",
-                    lines: [
-                        { s: "Flight Attendant", t: "What do you <span class='vocab' onclick='modeMatch()'>want<span class='tooltip'>istemek (v)</span></span> to eat? Chicken or pasta?" },
-                        { s: "Deniz", t: "I will <span class='vocab' onclick='modeMatch()'>have<span class='tooltip'>almak (v)</span></span> the pasta, please." },
-                        { s: "Flight Attendant", t: "Here is your <span class='vocab' onclick='modeMatch()'>hot<span class='tooltip'>sıcak (adj)</span></span> meal." },
-                        { s: "Deniz", t: "Does it <span class='vocab' onclick='modeMatch()'>come<span class='tooltip'>gelmek (v)</span></span> with bread?" },
-                        { s: "Flight Attendant", t: "Yes, there is a bread roll on the <span class='vocab' onclick='modeMatch()'>tray<span class='tooltip'>tepsi (n)</span></span>." },
-                        { s: "Deniz", t: "Thank you. It <span class='vocab' onclick='modeMatch()'>looks<span class='tooltip'>görünmek (v)</span></span> <span class='vocab' onclick='modeMatch()'>good<span class='tooltip'>iyi (adj)</span></span>." },
-                        { s: "Flight Attendant", t: "<span class='vocab' onclick='modeMatch()'>Enjoy<span class='tooltip'>afiyet olsun (v)</span></span> your meal." },
-                        { s: "Deniz", t: "I will, thanks." }
-                    ],
-                    pairs: [{e:"want", t:"istemek (v)"},{e:"have", t:"almak (v)"},{e:"hot", t:"sıcak (adj)"},{e:"come", t:"gelmek (v)"},{e:"tray", t:"tepsi (n)"},{e:"looks", t:"görünüyor (v)"},{e:"good", t:"iyi (adj)"},{e:"enjoy", t:"afiyet olsun (v)"},{e:"chicken", t:"tavuk (n)"},{e:"pasta", t:"makarna (n)"}],
-                    questions: [{q:"What do you want to eat?", a:"i will have the pasta please"},{q:"Here is your meal.", a:"does it come with bread"},{q:"There is bread on the tray.", a:"thank you it looks good"},{q:"Enjoy your meal.", a:"i will thanks"}]
-                },
-                {
-                    title: "3.2 Ordering a Drink",
-                    audio: "Step_3__In-Flight_Service_2._Ordering_a_Drink.mp3",
-                    lines: [
-                        { s: "Flight Attendant", t: "What would you like to <span class='vocab' onclick='modeMatch()'>drink<span class='tooltip'>içmek (v)</span></span>?" },
-                        { s: "Deniz", t: "Can I have some apple <span class='vocab' onclick='modeMatch()'>juice<span class='tooltip'>meyve suyu (n)</span></span>?" },
-                        { s: "Flight Attendant", t: "Do you <span class='vocab' onclick='modeMatch()'>want<span class='tooltip'>istemek (v)</span></span> ice in it?" },
-                        { s: "Deniz", t: "No ice, please." },
-                        { s: "Flight Attendant", t: "Here is your juice." },
-                        { s: "Deniz", t: "Can I have a <span class='vocab' onclick='modeMatch()'>glass<span class='tooltip'>bardak (n)</span></span> of water, too?" },
-                        { s: "Flight Attendant", t: "Of course. Here you <span class='vocab' onclick='modeMatch()'>go<span class='tooltip'>buyurun (v)</span></span>." },
-                        { s: "Deniz", t: "Thank you very much." }
-                    ],
-                    pairs: [{e:"drink", t:"içmek (v)"},{e:"juice", t:"meyve suyu (n)"},{e:"want", t:"istemek (v)"},{e:"glass", t:"bardak (n)"},{e:"go", t:"al (v)"},{e:"apple", t:"elma (n)"},{e:"water", t:"su (n)"},{e:"ice", t:"buz (n)"},{e:"no", t:"hayır (adv)"},{e:"much", t:"çok (adj)"}],
-                    questions: [{q:"What would you like to drink?", a:"can i have some apple juice"},{q:"Do you want ice?", a:"no ice please"},{q:"Can I have water too?", a:"of course here you go"},{q:"Here you go.", a:"thank you very much"}]
-                },
-                {
-                    title: "3.3 Dropping a Fork",
-                    audio: "Step_3__In-Flight_Service_3._Dropping_a_Fork.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, my <span class='vocab' onclick='modeMatch()'>fork<span class='tooltip'>çatal (n)</span></span> <span class='vocab' onclick='modeMatch()'>fell<span class='tooltip'>düştü (v2)</span></span> on the floor." },
-                        { s: "Flight Attendant", t: "Oh, don't <span class='vocab' onclick='modeMatch()'>use<span class='tooltip'>kullanmak (v)</span></span> it. I will <span class='vocab' onclick='modeMatch()'>get<span class='tooltip'>getirmek (v)</span></span> a new one." },
-                        { s: "Deniz", t: "I am <span class='vocab' onclick='modeMatch()'>sorry<span class='tooltip'>üzgün (adj)</span></span> about that." },
-                        { s: "Flight Attendant", t: "It is no <span class='vocab' onclick='modeMatch()'>problem<span class='tooltip'>sorun (n)</span></span> at all." },
-                        { s: "Deniz", t: "The food is very <span class='vocab' onclick='modeMatch()'>nice<span class='tooltip'>güzel (adj)</span></span>, by the way." },
-                        { s: "Flight Attendant", t: "I am <span class='vocab' onclick='modeMatch()'>glad<span class='tooltip'>memnun (adj)</span></span> you like it. Here is a <span class='vocab' onclick='modeMatch()'>clean<span class='tooltip'>temiz (adj)</span></span> fork." },
-                        { s: "Deniz", t: "Thanks for your <span class='vocab' onclick='modeMatch()'>quick<span class='tooltip'>hızlı (adj)</span></span> help." },
-                        { s: "Flight Attendant", t: "You are welcome." }
-                    ],
-                    pairs: [{e:"fork", t:"çatal (n)"},{e:"fell", t:"düştü (v)"},{e:"use", t:"kullanmak (v)"},{e:"get", t:"getirmek (v)"},{e:"sorry", t:"üzgün (adj)"},{e:"problem", t:"sorun (n)"},{e:"nice", t:"güzel (adj)"},{e:"glad", t:"memnun (adj)"},{e:"clean", t:"temiz (adj)"},{e:"quick", t:"hızlı (adj)"}],
-                    questions: [{q:"My fork fell on the floor.", a:"don't use it i will get a new one"},{q:"I am sorry.", a:"it is no problem at all"},{q:"The food is nice.", a:"i am glad you like it here is a clean fork"},{q:"Thanks for quick help.", a:"you are welcome"}]
-                },
-                {
-                    title: "3.4 Trash Collection",
-                    audio: "Step_3__In-Flight_Service_4._Trash_Collection.mp3",
-                    lines: [
-                        { s: "Flight Attendant", t: "Have you <span class='vocab' onclick='modeMatch()'>finished<span class='tooltip'>bitirmek (v)</span></span> your meal?" },
-                        { s: "Deniz", t: "Yes, you can <span class='vocab' onclick='modeMatch()'>take<span class='tooltip'>almak (v)</span></span> my tray." },
-                        { s: "Flight Attendant", t: "Did you <span class='vocab' onclick='modeMatch()'>like<span class='tooltip'>sevmek (v)</span></span> the pasta?" },
-                        { s: "Deniz", t: "It was <span class='vocab' onclick='modeMatch()'>delicious<span class='tooltip'>lezzetli (adj)</span></span>, thank you." },
-                        { s: "Flight Attendant", t: "Would you like some tea or <span class='vocab' onclick='modeMatch()'>coffee<span class='tooltip'>kahve (n)</span></span> now?" },
-                        { s: "Deniz", t: "I will <span class='vocab' onclick='modeMatch()'>have<span class='tooltip'>almak (v)</span></span> some <span class='vocab' onclick='modeMatch()'>black<span class='tooltip'>siyah (adj)</span></span> tea with sugar." },
-                        { s: "Flight Attendant", t: "I will <span class='vocab' onclick='modeMatch()'>bring<span class='tooltip'>getirmek (v)</span></span> it right away." },
-                        { s: "Deniz", t: "<span class='vocab' onclick='modeMatch()'>Take<span class='tooltip'>almak (v)</span></span> your time." }
-                    ],
-                    pairs: [{e:"finished", t:"bitirmek (v)"},{e:"take", t:"almak (v)"},{e:"like", t:"sevmek (v)"},{e:"delicious", t:"lezzetli (adj)"},{e:"coffee", t:"kahve (n)"},{e:"have", t:"almak (v)"},{e:"black", t:"siyah (adj)"},{e:"bring", t:"getirmek (v)"},{e:"sugar", t:"şeker (n)"},{e:"tea", t:"çay (n)"}],
-                    questions: [{q:"Finished your meal?", a:"yes you can take my tray"},{q:"Did you like the pasta?", a:"it was delicious thank you"},{q:"Tea or coffee?", a:"i will have some black tea with sugar"},{q:"I will bring it right away.", a:"take your time"}]
-                },
-                {
-                    title: "3.5 Arrival Time",
-                    audio: "Step_3__In-Flight_Service_5._Arrival_Time.mp3",
-                    lines: [
-                        { s: "Deniz", t: "Excuse me, when do we <span class='vocab' onclick='modeMatch()'>arrive<span class='tooltip'>varmak (v)</span></span>?" },
-                        { s: "Flight Attendant", t: "We will <span class='vocab' onclick='modeMatch()'>land<span class='tooltip'>iniş yapmak (v)</span></span> in one hour." },
-                        { s: "Deniz", t: "Are we <span class='vocab' onclick='modeMatch()'>on time<span class='tooltip'>vaktinde (adv)</span></span>?" },
-                        { s: "Flight Attendant", t: "Yes, the weather is <span class='vocab' onclick='modeMatch()'>good<span class='tooltip'>iyi (adj)</span></span>. We are on time." },
-                        { s: "Deniz", t: "That is <span class='vocab' onclick='modeMatch()'>great<span class='tooltip'>harika (adj)</span></span>. I have a bus to <span class='vocab' onclick='modeMatch()'>catch<span class='tooltip'>yakalamak (v)</span></span>." },
-                        { s: "Flight Attendant", t: "We will <span class='vocab' onclick='modeMatch()'>start<span class='tooltip'>başlamak (v)</span></span> <span class='vocab' onclick='modeMatch()'>going down<span class='tooltip'>alçalmak (v)</span></span> soon." },
-                        { s: "Deniz", t: "Okay, I will <span class='vocab' onclick='modeMatch()'>pack<span class='tooltip'>toplamak (v)</span></span> my things." },
-                        { s: "Flight Attendant", t: "Please <span class='vocab' onclick='modeMatch()'>stay<span class='tooltip'>kalmak (v)</span></span> in your seat." }
-                    ],
-                    pairs: [{e:"arrive", t:"varmak (v)"},{e:"land", t:"iniş yapmak (v)"},{e:"on time", t:"vaktinde (adv)"},{e:"good", t:"iyi (adj)"},{e:"great", t:"harika (adj)"},{e:"catch", t:"yakalamak (v)"},{e:"start", t:"başlamak (v)"},{e:"going down", t:"alçalmak (v)"},{e:"pack", t:"toplamak (v)"},{e:"stay", t:"kalmak (v)"}],
-                    questions: [{q:"When do we arrive?", a:"we will land in one hour"},{q:"Are we on time?", a:"yes the weather is good we are on time"},{q:"I have a bus to catch.", a:"we will start going down soon"},{q:"I will pack my things.", a:"please stay in your seat"}]
-                }
-            ]
-        }
-    };
-
-    // Auto-filler for steps 4-21
-    for(let s=4; s<=21; s++){
-        appData['step'+s] = { dialogues: [] };
-        for(let d=1; d<=5; d++){
-            appData['step'+s].dialogues.push({ title: "Scenario "+s+"."+d, lines: [{s:"Deniz", t:"Ready for practice."}], pairs: [{e:"Wait", t:"Beklemek (v)"}], questions: [{q:"Ready?", a:"yes"}] });
-        }
-    }
-
-    function initLobby() {
-        const grid = document.getElementById('step-grid'); grid.innerHTML = '';
-        stepInfo.forEach((meta, i) => {
-            const k = 'step'+(i+1), p = 'step'+i;
-            const open = i === 0 || (progress[p] && Object.keys(progress[p]).length >= 2);
-            grid.innerHTML += `<div class="step-card ${open ? '' : 'locked'}" onclick="${open ? `openStep('${k}')` : ''}">
-                <span class="step-icon">${open ? meta.i : '🔒'}</span>
-                <span class="step-title">${i+1}. ${meta.t}</span>
-                <div class="progress-tag">${progress[k] ? Object.keys(progress[k]).length : 0}/5 Done</div></div>`;
-        });
-    }
-
-    function openStep(k) {
-        activeStepKey = k; document.getElementById('lobby-view').classList.add('hidden');
-        document.getElementById('step-view').classList.remove('hidden'); document.getElementById('game-view').classList.add('hidden');
-        document.getElementById('step-title').innerText = stepInfo[parseInt(k.replace('step',''))-1].t;
-        const list = document.getElementById('dialogue-list'); list.innerHTML = '';
-        appData[k].dialogues.forEach((d, idx) => {
-            const isDone = progress[k] && progress[k][idx];
-            list.innerHTML += `<div class="dialogue-item" onclick="openGame(${idx})">
-                <span>${idx+1}. ${d.title}</span><span class="status-badge">${isDone ? '✅' : '⏳'}</span></div>`;
-        });
-    }
-
-    function openGame(idx) {
-        activeIdx = idx; document.getElementById('step-view').classList.add('hidden'); document.getElementById('game-view').classList.remove('hidden');
-        document.getElementById('current-dialogue-title').innerText = appData[activeStepKey].dialogues[idx].title;
-        document.getElementById('content-area').innerHTML = '<h3 style="text-align:center;margin-top:150px;color:#94a3b8;">Choose a mode!</h3>';
-    }
-
-    function modeListen() {
-        const p = document.getElementById('master-player');
-        p.src = AUD_PATH + encodeURIComponent(appData[activeStepKey].dialogues[activeIdx].audio);
-        p.play().catch(e => alert("FILE ERROR: " + appData[activeStepKey].dialogues[activeIdx].audio));
-        saveProgress(); document.getElementById('content-area').innerHTML = '<div style="text-align:center;padding-top:80px;"><h2>🎧 Playing Audio...</h2></div>';
-    }
-
-    function modeRead() {
-        modeListen(); let html = '<h3 style="border-bottom:1px solid #eee;padding-bottom:10px;">Read & Listen</h3>';
-        appData[activeStepKey].dialogues[activeIdx].lines.forEach(l => {
-            html += `<div class="dialogue-line"><span class="speaker-label speaker-${l.s}">${l.s}:</span> ${l.t}</div>`;
-        });
-        document.getElementById('content-area').innerHTML = html;
-    }
-
-    let mSel = { e: null, t: null };
-    function modeMatch() {
-        saveProgress(); const d = appData[activeStepKey].dialogues[activeIdx];
-        const src = (d.pairs.length >= 4) ? d.pairs : [{e:"Go", t:"Gitmek (v)"},{e:"Wait", t:"Beklemek (v)"}];
-        let en = [...src].sort(() => Math.random() - 0.5), tr = [...src].sort(() => Math.random() - 0.5);
-        let attempts = 0;
-        while(en[0].e === src.find(x => x.t === tr[0].t).e && attempts < 20) { tr.sort(() => Math.random() - 0.5); attempts++; }
-        document.getElementById('content-area').innerHTML = '<div class="match-grid"><div class="match-col" id="m-en"></div><div class="match-col" id="m-tr"></div></div>';
-        en.forEach(p => {
-            let b = document.createElement('button'); b.className = 'match-btn match-en'; b.innerText = p.e;
-            b.onclick = () => { selMatch(b, 'e', p.e) }; document.getElementById('m-en').appendChild(b);
-        });
-        tr.forEach(p => {
-            let b = document.createElement('button'); b.className = 'match-btn match-tr'; b.innerText = p.t;
-            b.onclick = () => { selMatch(b, 't', p.t) }; document.getElementById('m-tr').appendChild(b);
-        });
-    }
-
-    function selMatch(btn, type, val) {
-        document.querySelectorAll('.match-'+type).forEach(x => x.classList.remove('selected'));
-        btn.classList.add('selected'); mSel[type] = val;
-        if(mSel.e && mSel.t) {
-            const d = appData[activeStepKey].dialogues[activeIdx];
-            if(d.pairs.find(p => p.e === mSel.e && p.t === mSel.t)) document.querySelectorAll('.selected').forEach(x => x.classList.add('matched'));
-            mSel = { e: null, t: null }; setTimeout(() => document.querySelectorAll('.match-btn').forEach(x => x.classList.remove('selected')), 300);
-        }
-    }
-
-    function modeSpeak() {
-        currentQIdx = 0; attempts = 0; const S = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!S) { alert("Use Chrome for mic features."); return; }
-        recognition = new S(); recognition.lang = 'en-US';
-        recognition.onresult = (e) => {
-            const r = e.results[0][0].transcript.toLowerCase(); const x = appData[activeStepKey].dialogues[activeIdx].questions[currentQIdx].a;
-            if(r.includes(x.split(' ').pop()) || r === x) {
-                document.getElementById('feed').innerHTML = '<span style="color:green">✅ Correct!</span>';
-                setTimeout(() => { currentQIdx++; attempts = 0; renderQ(); }, 1500);
-            } else {
-                attempts++; if(attempts >= 2) {
-                    document.getElementById('feed').innerHTML = `<span style="color:red">❌ Answer: "${x}"</span>`;
-                    setTimeout(() => { currentQIdx++; attempts = 0; renderQ(); }, 3500);
-                } else document.getElementById('feed').innerHTML = "Try again!";
-            }
-        }; renderQ();
-    }
-
-    function renderQ() {
-        const q = appData[activeStepKey].dialogues[activeIdx].questions;
-        if(!q || currentQIdx >= q.length) { document.getElementById('content-area').innerHTML = '<h2>🎉 Done!</h2>'; return; }
-        document.getElementById('content-area').innerHTML = `<div class="speech-box"><h3>${q[currentQIdx].q}</h3><button class="mic-btn" id="mic" onclick="recognition.start(); document.getElementById('mic').classList.add('listening')">🎤</button><div id="feed" class="feedback-txt">Attempt ${attempts+1}/2</div></div>`;
-    }
-
-    function saveProgress() { if(!progress[activeStepKey]) progress[activeStepKey] = {}; progress[activeStepKey][activeIdx] = true; localStorage.setItem('denizTravelProgress', JSON.stringify(progress)); }
-    function showLobby() { document.getElementById('step-view').classList.add('hidden'); document.getElementById('lobby-view').classList.remove('hidden'); initLobby(); }
-    function showStepView() { openStep(activeStepKey); }
-    window.onload = initLobby;
-</script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

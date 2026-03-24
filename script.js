@@ -26,11 +26,36 @@ document.getElementById('btn-back-lobby').onclick = () => {
 };
 
 // AUDIO CONTROLS
-document.getElementById('ctrl-play').onclick = () => audio.play();
+document.getElementById('ctrl-play').onclick = () => { audio.play().catch(e => console.log("Play failed", e)); };
 document.getElementById('ctrl-pause').onclick = () => audio.pause();
 document.getElementById('ctrl-stop').onclick = () => { audio.pause(); audio.currentTime = 0; };
 
-// GENERATE ACCORDION LOBBY
+// GET ICON FOR CATEGORY
+function getCategoryIcon(catName) {
+    if(catName.includes("Airport Check-In")) return "✈️";
+    if(catName.includes("Boarding")) return "💺";
+    if(catName.includes("In-Flight")) return "🍽️";
+    if(catName.includes("Passport")) return "🛂";
+    if(catName.includes("Customs")) return "🛃";
+    if(catName.includes("Transfer")) return "🚕";
+    if(catName.includes("Hotel Check-In")) return "🏨";
+    if(catName.includes("Complaints")) return "😠";
+    if(catName.includes("Arriving")) return "🍷";
+    if(catName.includes("Ordering Food")) return "🍲";
+    if(catName.includes("Restaurant Problems")) return "🤦";
+    if(catName.includes("Check")) return "💳";
+    if(catName.includes("Directions")) return "🗺️";
+    if(catName.includes("Renting")) return "🚗";
+    if(catName.includes("Medical")) return "🚑";
+    if(catName.includes("Pharmacy")) return "💊";
+    if(catName.includes("Lost Item")) return "👮";
+    if(catName.includes("Hotel")) return "🛏️";
+    if(catName.includes("Shopping")) return "🛍️";
+    if(catName.includes("Driver")) return "🗣️";
+    return "📁";
+}
+
+// GENERATE GRID LOBBY
 function generateLobby() {
     lobbyContainer.innerHTML = "";
     const groups = {};
@@ -48,9 +73,17 @@ function generateLobby() {
 
     // Build the UI
     Object.keys(groups).forEach(cat => {
-        const catBtn = document.createElement('button');
+        const catBtn = document.createElement('div');
         catBtn.className = 'lobby-cat-btn';
-        catBtn.innerHTML = `📁 ${cat}`;
+        
+        // Match the screenshot layout structurally
+        catBtn.innerHTML = `
+            <div class="lobby-icon">${getCategoryIcon(cat)}</div>
+            <div class="lobby-text-col">
+                <span class="lobby-card-title">${cat}</span>
+                <span class="lobby-card-sub">Click to preview 5 lessons ↓</span>
+            </div>
+        `;
         
         const subContainer = document.createElement('div');
         subContainer.className = 'lobby-sub-container hidden';
@@ -65,15 +98,17 @@ function generateLobby() {
         groups[cat].forEach(sub => {
             const subBtn = document.createElement('button');
             subBtn.className = 'lobby-sub-btn';
-            subBtn.innerHTML = `🎧 ${sub.title}`;
+            subBtn.innerHTML = `▶ ${sub.title}`;
             subBtn.onclick = () => {
                 lobbyScreen.classList.add('hidden');
                 playerZone.classList.remove('hidden');
                 document.getElementById('now-playing-title').innerText = sub.title;
-                audio.src = sub.file;
                 
-                // SPEED BOOST APPLIED HERE
-                audio.playbackRate = 1.1; 
+                // AUDIO LOAD AND SPEED BOOST
+                audio.src = sub.file;
+                audio.oncanplay = () => {
+                    audio.playbackRate = 1.1;
+                };
                 
                 wordBucket = [];
                 currentLessonData = lessonData[sub.file];
@@ -115,7 +150,7 @@ document.getElementById('btn-read').onclick = () => {
             });
             transcript.appendChild(lineDiv);
         });
-        audio.play();
+        audio.play().catch(e => console.log(e));
     }
 };
 
@@ -213,4 +248,8 @@ function showRes(isCorrect, msg, qData, lesson, retry=false) {
         document.getElementById('btn-re').onclick = () => { area.innerHTML = ""; };
     }
 }
-document.getElementById('btn-blind').onclick = () => { transcript.classList.add('hidden'); gameZone.classList.add('hidden'); audio.play(); };
+document.getElementById('btn-blind').onclick = () => { 
+    transcript.classList.add('hidden'); 
+    gameZone.classList.add('hidden'); 
+    audio.play().catch(e => console.log(e)); 
+};

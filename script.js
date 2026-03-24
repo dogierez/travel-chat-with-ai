@@ -1,9 +1,10 @@
 const splash = document.getElementById('splash-screen'), instr = document.getElementById('instructions-screen'),
-      app = document.getElementById('main-app'), lobbyScreen = document.getElementById('lobby-screen'),
-      lobbyContainer = document.getElementById('lobby-container'), playerZone = document.getElementById('player-zone'), 
-      audio = document.getElementById('audio-player'), transcript = document.getElementById('transcript-box'), 
-      popup = document.getElementById('translation-popup'), gameZone = document.getElementById('game-zone'), 
-      gameBoard = document.getElementById('game-board'), feedbackArea = document.getElementById('quiz-feedback-area');
+      lobbyScreen = document.getElementById('lobby-screen'), lobbyContainer = document.getElementById('lobby-container'), 
+      subScreen = document.getElementById('sub-screen'), subContainer = document.getElementById('sub-container'),
+      playerZone = document.getElementById('player-zone'), audio = document.getElementById('audio-player'), 
+      transcript = document.getElementById('transcript-box'), popup = document.getElementById('translation-popup'), 
+      gameZone = document.getElementById('game-zone'), gameBoard = document.getElementById('game-board'), 
+      feedbackArea = document.getElementById('quiz-feedback-area');
 
 let wordBucket = []; let currentQ = 0; let attempts = 0; let totalScore = 0; let firstCard = null;
 let currentLessonData = null; 
@@ -11,7 +12,7 @@ let currentLessonData = null;
 // NAVIGATION
 document.getElementById('btn-start').onclick = () => { splash.classList.add('hidden'); instr.classList.remove('hidden'); };
 document.getElementById('btn-enter').onclick = () => { 
-    instr.classList.add('hidden'); app.classList.remove('hidden'); 
+    instr.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); 
     if (typeof lessonData === 'undefined') {
         lobbyContainer.innerHTML = "<h2 style='color:#ff4444;'>DATA ERROR: Check data.js syntax!</h2>";
     } else {
@@ -19,8 +20,11 @@ document.getElementById('btn-enter').onclick = () => {
     }
 };
 
-document.getElementById('btn-back-lobby').onclick = () => { 
-    playerZone.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); 
+document.getElementById('btn-back-grid').onclick = () => { 
+    subScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); 
+};
+document.getElementById('btn-back-sub').onclick = () => { 
+    playerZone.classList.add('hidden'); subScreen.classList.remove('hidden'); 
     transcript.classList.add('hidden'); gameZone.classList.add('hidden'); 
     audio.pause(); currentQ = 0; totalScore = 0; attempts = 0; currentLessonData = null;
 };
@@ -60,7 +64,6 @@ function generateLobby() {
     lobbyContainer.innerHTML = "";
     const groups = {};
     
-    // Group the files automatically by parsing the filename
     Object.keys(lessonData).forEach(fn => {
         let catMatch = fn.match(/^(.*?)_\d+\._/);
         let catName = catMatch ? catMatch[1].replace(/__/g, ": ").replace(/_/g, " ") : "Category";
@@ -71,53 +74,47 @@ function generateLobby() {
         groups[catName].push({ file: fn, title: subName });
     });
 
-    // Build the UI
     Object.keys(groups).forEach(cat => {
         const catBtn = document.createElement('div');
-        catBtn.className = 'lobby-cat-btn';
+        catBtn.className = 'lobby-card';
         
-        // Match the screenshot layout structurally
         catBtn.innerHTML = `
             <div class="lobby-icon">${getCategoryIcon(cat)}</div>
-            <div class="lobby-text-col">
-                <span class="lobby-card-title">${cat}</span>
-                <span class="lobby-card-sub">Click to preview 5 lessons ↓</span>
+            <div class="lobby-text">
+                <span class="lobby-title">${cat}</span>
+                <span class="lobby-sub">Click to preview 5 lessons ↓</span>
             </div>
         `;
         
-        const subContainer = document.createElement('div');
-        subContainer.className = 'lobby-sub-container hidden';
-        
-        catBtn.onclick = () => {
-            document.querySelectorAll('.lobby-sub-container').forEach(c => { if(c !== subContainer) c.classList.add('hidden'); });
-            document.querySelectorAll('.lobby-cat-btn').forEach(b => { if(b !== catBtn) b.classList.remove('active-cat'); });
-            subContainer.classList.toggle('hidden');
-            catBtn.classList.toggle('active-cat');
-        };
-        
-        groups[cat].forEach(sub => {
-            const subBtn = document.createElement('button');
-            subBtn.className = 'lobby-sub-btn';
-            subBtn.innerHTML = `▶ ${sub.title}`;
-            subBtn.onclick = () => {
-                lobbyScreen.classList.add('hidden');
-                playerZone.classList.remove('hidden');
-                document.getElementById('now-playing-title').innerText = sub.title;
-                
-                // AUDIO LOAD AND SPEED BOOST
-                audio.src = sub.file;
-                audio.oncanplay = () => {
-                    audio.playbackRate = 1.1;
-                };
-                
-                wordBucket = [];
-                currentLessonData = lessonData[sub.file];
-            };
-            subContainer.appendChild(subBtn);
-        });
-        
+        catBtn.onclick = () => openSubMenu(cat, groups[cat]);
         lobbyContainer.appendChild(catBtn);
-        lobbyContainer.appendChild(subContainer);
+    });
+}
+
+// OPEN SUB MENU
+function openSubMenu(catTitle, lessons) {
+    lobbyScreen.classList.add('hidden');
+    subScreen.classList.remove('hidden');
+    document.getElementById('sub-title').innerText = catTitle;
+    subContainer.innerHTML = "";
+
+    lessons.forEach((lesson, index) => {
+        const btn = document.createElement('div'); 
+        btn.className = 'station-tile';
+        btn.innerHTML = `<b>${index + 1}.</b> ${lesson.title}`;
+        btn.onclick = () => { 
+            subScreen.classList.add('hidden'); 
+            playerZone.classList.remove('hidden'); 
+            document.getElementById('now-playing-title').innerText = lesson.title; 
+            
+            // LOAD AUDIO & APPLY SPEED BOOST
+            audio.src = lesson.file; 
+            audio.oncanplay = () => { audio.playbackRate = 1.1; };
+
+            wordBucket = []; 
+            currentLessonData = lessonData[lesson.file];
+        };
+        subContainer.appendChild(btn);
     });
 }
 
@@ -248,6 +245,7 @@ function showRes(isCorrect, msg, qData, lesson, retry=false) {
         document.getElementById('btn-re').onclick = () => { area.innerHTML = ""; };
     }
 }
+
 document.getElementById('btn-blind').onclick = () => { 
     transcript.classList.add('hidden'); 
     gameZone.classList.add('hidden'); 
